@@ -1,0 +1,14 @@
+**/.DS_Store
+.idea/
+*.iml
+target/
+.classpath
+.project
+.settings/
+CompressorTest*.jpg
+*.log
+Base.jpg
+Top.jpg
+outputs/
+work
+CHANGELOG.md

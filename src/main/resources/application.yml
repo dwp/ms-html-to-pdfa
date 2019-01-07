@@ -1,0 +1,2 @@
+app_name: ${project.artifactId}
+app_version: ${project.version}
