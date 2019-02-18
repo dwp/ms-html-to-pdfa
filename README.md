@@ -1,4 +1,5 @@
 # ms-html-to-pdfa
+[![Build Status](https://travis-ci.org/dwp/ms-html-to-pdfa.svg?branch=master)](https://travis-ci.org/dwp/ms-html-to-pdfa) [![Known Vulnerabilities](https://snyk.io/test/github/dwp/ms-html-to-pdfa/badge.svg)](https://snyk.io/test/github/dwp/ms-html-to-pdfa)
 
 RESTful service receiving json to construct a PDF document to various conformance levels
 

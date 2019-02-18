@@ -6,10 +6,37 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
+    <url>https://github.com/dwp/ms-html-to-pdfa</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <distribution>repo</distribution>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Chris Hulley</name>
+            <organization>DWP</organization>
+            <email>chris.hulley@dwp.gsi.gov.uk</email>
+            <organizationUrl>http://www.gov.uk/dwp</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:dwp/ms-html-to-pdfa.git</connection>
+        <developerConnection>scm:git:ssh://github.com:dwp/ms-html-to-pdfa.git</developerConnection>
+        <url>https://github.com/dwp/ms-html-to-pdfa</url>
+    </scm>
 
     <properties>
-        <dwp.encoded-log.version>2.0.2</dwp.encoded-log.version>
+        <dwp.encoded-log.version>2.0.3</dwp.encoded-log.version>
 
         <google-guava.version>25.0-jre</google-guava.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
@@ -19,7 +46,8 @@
         <maven-shade.version>1.6</maven-shade.version>
         <dropwizard.version>1.3.5</dropwizard.version>
         <mockito.version>1.10.19</mockito.version>
-        <owasp.version>3.1.2</owasp.version>
+        <jackson.version>2.9.8</jackson.version>
+        <owasp.version>4.0.2</owasp.version>
         <junit.version>4.11</junit.version>
 
         <cucumber-core.version>1.2.4</cucumber-core.version>
@@ -31,6 +59,11 @@
             <groupId>uk.gov.dwp.logging</groupId>
             <artifactId>encoded-logger-output</artifactId>
             <version>${dwp.encoded-log.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
