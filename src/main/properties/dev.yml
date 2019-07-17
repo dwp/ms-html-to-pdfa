@@ -1,12 +1,12 @@
 server:
   applicationConnectors:
-  - type: http
-    port: 6677
+  - type: ${SERVER_APP_CONNECTOR:-http}
+    port: ${SERVER_APP_PORT:-6677}
   adminConnectors:
-  - type: http
-    port: 0
+  - type: ${SERVER_ADMIN_CONNECTOR:-http}
+    port: ${SERVER_ADMIN_PORT:-0}
   requestLog:
-    type: external
+    type: ${SERVER_REQUEST_LOG_TYPE:-external}
 
 logging:
-  type: external
+  type: ${LOGGING_TYPE:-external}

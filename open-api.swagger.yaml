@@ -1,0 +1,86 @@
+openapi: 3.0.1
+info:
+  title: HTML to PDF
+  description: A single endpoint that renders well formatted XHTML/HTML into a PDFA/A1 document that is compliant with the needs of the DWP. The originators of the service can be found at this link "https://github.com/dwp/ms-html-to-pdfa".
+  contact:
+    name: Health PDU
+    email: opensource@engineering.digital.dwp.gov.uk
+  license:
+    name: ISC
+    url: "https://opensource.org/licenses/ISC"
+  version: 1.0.0
+servers:
+- url: http://localhost:6677
+  variables:
+    environment: 
+      default: localhost
+      description: run the service in the local environment
+    port:
+      default: '6677'
+      description: the port to be served in the environment
+paths:
+  /generatePdf:
+    post:
+      tags:
+      - Generate PDF
+      summary: Generate a PDF from well formed XHTML / HTML.
+      description: This endpoint will generate a PDF from well formed XHTML / HTML.
+      operationId: generatePDF
+      deprecated: false
+      requestBody:
+        description: POST endpoint receiving the information to build the pdf file.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputPayload'
+            example:
+              colour_profile: "base64-encoded-file"
+              font_map:
+                tahoma: "base64-encoded-file"
+                arial: "base-64-encoded-file"
+              page_html: "base-64-encoded-html"
+              conformance_level: "PDFA_1_A"
+      responses:
+        200:
+          description: Returns the input html as a base-64 encoded PDF file
+          content:
+            text/plain:
+              schema:
+                type: string
+        400:
+          description: Bad or Malformed json document or json elements. Returns a brief error message as the response body (full error is logged).
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Json formatting exception :: Unrecognized field "age_html" (class uk.gov.dwp.pdfa.items.JsonPdfInputItem), not marked as ignorable (4 known properties: "conformance_level", "page_html", "font_map", "colour_profile"]) at [Source: (String)"{ "age_html": "PGh0bWw+DQogICAgPGhlYW [truncated 6503 chars]; line: 2, column: 15] (through reference chain: uk.gov.dwp.pdfa.items.JsonPdfInputItem["age_html"])'
+        500:
+          description: Internal error occurred, bad html or conformance levels, font/colour profile embedding. Returns a brief error message as the response body (full error is logged)
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "uk.gov.dwp.pdfa.exception.PdfaGeneratorException :: Can't load the XML resource (using TRaX transformer). org.xml.sax.SAXParseException; lineNumber: 2; columnNumber: 10; The markup in the document following the root element must be well-formed."
+components:
+  schemas:
+    InputPayload:
+      required:
+        - page_html
+      title: InputPayload
+      type: object
+      properties:
+        colour_profile:
+          type: string
+          description: The base 64 encoded file contents to be embedded to the pdf. If the colour_profile is missing or null then the default colour profile will be applied (src/main/resources/colours/sRBG.icm)
+        font_map:
+          type: object
+          description: A list of fonts to be embedded into the pdf.  If the font_map is missing or null then 2 default fonts will be embedded into the document. The format for the key is the name of the font (eg. arial), this must be specified in the html style header using the same format. The format for the value is the base64 encoded version of the .ttf file contents to be embedded with the file
+          additionalProperties:
+            type: string
+        page_html:
+          type: string
+          description: (mandatory) The base64 encoded html document
+        conformance_level:
+          type: string
+          enum: [PDFA_1_A, PDFA_1_B, PDFA_2_A, PDFA_2_B, PDFA_3_A, PDFA_3_B, PDFA_3_U, NONE]
+          description: The conformance level for the resulting pdf. If missing or null it will default to PDFA_1_A
