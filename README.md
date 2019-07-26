@@ -12,17 +12,17 @@ Standard maven build.
 
 * from the IDE run the `uk.gov.dwp.pdfa.application.HtmlToPdfApplication` with program arguments `server path/to/properties.yml` (eg. _src/main/properties/dev.yml_)
 
-NOTE: this application will accept environment variables in the configuration file that will be picked up at runtime.  As an example environment variable SERVICE_PORT can be reflected in the configuration using the following :-
+NOTE: this application accepts environment variables that will be picked up at runtime (this file is bundled into to container).  If https configuration is needed a modified `config.yml` must be mounted into the container with the appropriate keystore/truststore locations (*see dropwizard documentation*).  
 
     server:
       applicationConnectors:
-      - type: http
-        port: ${SERVICE_PORT}
+      - type: ${SERVER_APP_CONNECTOR:-http}
+        port: ${SERVER_APP_PORT:-6677}
       adminConnectors:
-      - type: http
-        port: 0
+      - type: ${SERVER_ADMIN_CONNECTOR:-http}
+        port: ${SERVER_ADMIN_PORT:-0}
       requestLog:
-        type: external
+        type: ${SERVER_REQUEST_LOG_TYPE:-external}
 
 ## `/generatePdf`
 POST endpoint receiving the information to build the pdf file
@@ -44,17 +44,22 @@ POST endpoint receiving the information to build the pdf file
     * the name of the font (eg. arial), this must be specified in the html style header using the same format
     * the base64 encoded version of the `.ttf` file contents to be embedded with the file
 * `page_html` (mandatory): The base64 encoded html document
-* `conformance_level` (optional): The conformance level for the resulting pdf.  If missing or null it will default to PDFA_1_A.  Levels are detailed here -> https://en.wikipedia.org/wiki/PDF/A#Conformance_levels_and_versions with acceptable values as:-
-    * `NONE`
-    * `PDFA_1_A`
-    * `PDFA_1_B`
-    * `PDFA_2_A`
-    * `PDFA_2_B`
-    * `PDFA_3_A`
-    * `PDFA_3_B`
-    * `PDFA_3_U`
+* `conformance_level` (optional): The conformance level for the resulting pdf.  
+If this parameter is missing (or null) it will default to PDFA_UA; the tightest of all the conformance levels.  
 
-The only **mandatory** parameter is the base64 encoded html.  If (only html is passed) a standard colour profile will be used, 'arial' will be embedded to the pdf and the conformance level for the pdf will be PDFA_1_A
+Pdf conformance levels are detailed [here](https://en.wikipedia.org/wiki/PDF/A#Conformance_levels_and_versions) with acceptable values for this service as:-
+
+* `PDF_UA` (https://en.wikipedia.org/wiki/PDF/UA)
+* `PDFA_1_A`
+* `PDFA_1_B`
+* `PDFA_2_A`
+* `PDFA_2_B`
+* `PDFA_3_A`
+* `PDFA_3_B`
+* `PDFA_3_U`
+* `NONE`
+    
+The only **mandatory** parameter is the base64 encoded html.  If only the html is passed a standard colour profile will be used, `arial` (standard) and `courier` (monospace) will be embedded to the pdf and the conformance level for the pdf will be PDF/UA
 
 Returns:-
 
@@ -69,9 +74,9 @@ For the incoming html there are 2 things to consider.
 * The pdf generator requires **XHTML** which requires careful closing of tags (https://www.w3schools.com/html/html_xhtml.asp)
 * In order to satisfy the font requirements of PDFA_1_A document all elements need to reference the font that will be embedded.  This is best achieved by adding a `<STYLE>` element to the `<HEAD>` of the html and to apply it for all items (eg body).  The important point is to make sure that all fonts are explicitly specified in the html document.
 * If using images it is best to encode the images directly into the html.  eg `<img src="data:image/png;base64,<the-base64-encoded-string-of-the-image>"/>`
-* If using images `image-rendering` should be set pixelated or the following error will occur when trying to make PDFA_1_A:-
+* If using images `image-rendering` should be set pixelated or the following error will occur when trying to make any conformance level above NONE :-
     * https://github.com/veraPDF/veraPDF-validation-profiles/wiki/PDFA-Part-1-rules#rule-624-3
-    * "If an Image dictionary contains the Interpolate key, its value shall be false"
+    * *"If an Image dictionary contains the Interpolate key, its value shall be false"*
 
 eg.
 

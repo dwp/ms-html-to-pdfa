@@ -1,16 +1,16 @@
 package uk.gov.dwp.pdfa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.dwp.pdfa.exception.PdfaGeneratorException;
 import uk.gov.dwp.pdfa.items.JsonPdfInputItem;
+import uk.gov.dwp.pdfa.items.PdfExtendedConstants;
 import uk.gov.dwp.pdfa.transform.HtmlToPdfGenerator;
 
 import javax.ws.rs.core.Response;
@@ -24,9 +24,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("squid:S1192") // string literals allowed
 @RunWith(MockitoJUnitRunner.class)
 public class HtmlToPdfResourceTest {
     private static final String FULL_JSON = "{\"font_map\": {\"tahoma\":\"base64-string\",\"arial\":\"base64-string\"}, \"colour_profile\": \"base64-string\", \"page_html\": \"base64-html\", \"conformance_level\": \"PDFA_1_A\"}";
@@ -45,7 +48,7 @@ public class HtmlToPdfResourceTest {
     private ArgumentCaptor<Map<String, String>> fontMapCapture;
 
     @Captor
-    private ArgumentCaptor<PdfRendererBuilder.PdfAConformance> conformanceLevelCapture;
+    private ArgumentCaptor<String> conformanceLevelCapture;
 
     @Test
     public void testSuccessWithAllParameters() throws IOException, PdfaGeneratorException {
@@ -60,11 +63,11 @@ public class HtmlToPdfResourceTest {
 
         assertThat(pdfa.getStatus(), is(equalTo(HttpStatus.SC_OK)));
         assertThat(Base64.getDecoder().decode(pdfa.getEntity().toString()), is(equalTo(returningPdf)));
-        assertThat(conformanceLevelCapture.getValue(), is(equalTo(PdfRendererBuilder.PdfAConformance.valueOf(item.getConformanceLevel()))));
+        assertThat(conformanceLevelCapture.getValue(), is(equalTo((item.getConformanceLevel()))));
     }
 
     @Test
-    public void testPDFAWithMissingInputConformance() throws IOException, PdfaGeneratorException {
+    public void testPDFUAWithMissingInputConformance() throws IOException, PdfaGeneratorException {
         JsonPdfInputItem item = new ObjectMapper().readValue(MISSING_CONFORMANCE_LEVEL, JsonPdfInputItem.class);
         byte[] returningPdf = "i-am-a-pdf".getBytes();
 
@@ -76,15 +79,16 @@ public class HtmlToPdfResourceTest {
 
         assertThat(pdfa.getStatus(), is(equalTo(HttpStatus.SC_OK)));
         assertThat(Base64.getDecoder().decode(pdfa.getEntity().toString()), is(equalTo(returningPdf)));
-        assertThat(conformanceLevelCapture.getValue(), is(equalTo(PdfRendererBuilder.PdfAConformance.PDFA_1_A)));
+        assertThat(conformanceLevelCapture.getValue(), is(equalTo(PdfExtendedConstants.PDF_UA_CONFORMANCE)));
     }
 
     @Test
-    public void testRejectionWithInvalidConformance() throws IOException {
+    public void testRejectionWithInvalidConformance() throws IOException, PdfaGeneratorException {
+        when(htmlToPdfGenerator.createPdfaDocument(anyString(), anyString(), anyMap(), anyString())).thenThrow(new PdfaGeneratorException("i-am-exception"));
         HtmlToPdfResource instance = new HtmlToPdfResource(htmlToPdfGenerator);
         Response pdfa = instance.generatePdfDocument(BAD_CONFORMANCE_LEVEL);
 
-        assertThat(pdfa.getEntity().toString(), containsString("IllegalArgumentException"));
+        assertThat(pdfa.getEntity().toString(), containsString("PdfaGeneratorException"));
         assertThat(pdfa.getStatus(), is(equalTo(HttpStatus.SC_INTERNAL_SERVER_ERROR)));
     }
 
@@ -102,7 +106,7 @@ public class HtmlToPdfResourceTest {
         assertNotNull(colourProfileCapture.getValue());
         assertThat(pdfa.getStatus(), is(equalTo(HttpStatus.SC_OK)));
         assertThat(Base64.getDecoder().decode(pdfa.getEntity().toString()), is(equalTo(returningPdf)));
-        assertThat(conformanceLevelCapture.getValue(), is(equalTo(PdfRendererBuilder.PdfAConformance.valueOf(item.getConformanceLevel()))));
+        assertThat(conformanceLevelCapture.getValue(), is(equalTo(item.getConformanceLevel())));
     }
 
     @Test
@@ -119,7 +123,7 @@ public class HtmlToPdfResourceTest {
         assertNotNull(fontMapCapture.getValue());
         assertThat(pdfa.getStatus(), is(equalTo(HttpStatus.SC_OK)));
         assertThat(Base64.getDecoder().decode(pdfa.getEntity().toString()), is(equalTo(returningPdf)));
-        assertThat(conformanceLevelCapture.getValue(), is(equalTo(PdfRendererBuilder.PdfAConformance.valueOf(item.getConformanceLevel()))));
+        assertThat(conformanceLevelCapture.getValue(), is(equalTo(item.getConformanceLevel())));
 
         assertThat(fontMapCapture.getValue().size(), is(equalTo(2)));
         assertTrue(fontMapCapture.getValue().containsKey("arial"));

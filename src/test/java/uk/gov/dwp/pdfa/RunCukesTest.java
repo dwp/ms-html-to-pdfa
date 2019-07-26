@@ -11,7 +11,7 @@ import uk.gov.dwp.pdfa.application.HtmlToPdfApplication;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
 @RunWith(Cucumber.class)
-@SuppressWarnings("squid:S2187") // deliberately has no tests
+@SuppressWarnings({"squid:S2187", "squid:S1118"}) // deliberately has no tests and no private constructor needed
 @CucumberOptions(plugin = "json:target/cucumber-report.json", tags = {})
 public class RunCukesTest {
 

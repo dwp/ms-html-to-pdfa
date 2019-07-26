@@ -3,12 +3,12 @@ package uk.gov.dwp.pdfa;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.pdfa.items.JsonPdfInputItem;
+import uk.gov.dwp.pdfa.items.PdfExtendedConstants;
 import uk.gov.dwp.pdfa.transform.HtmlToPdfGenerator;
 
 import javax.ws.rs.POST;
@@ -47,7 +47,7 @@ public class HtmlToPdfResource {
                     pdfInputItem.getHtmlDocument(),
                     pdfInputItem.getColourProfile() != null ? pdfInputItem.getColourProfile() : getDefaultColourProfile(),
                     (pdfInputItem.getFontMap() != null && pdfInputItem.getFontMap().size() > 0) ? pdfInputItem.getFontMap() : getDefaultArialFont(),
-                    pdfInputItem.getConformanceLevel() != null ? PdfRendererBuilder.PdfAConformance.valueOf(pdfInputItem.getConformanceLevel()) : PdfRendererBuilder.PdfAConformance.PDFA_1_A
+                    pdfInputItem.getConformanceLevel() != null ? pdfInputItem.getConformanceLevel() : PdfExtendedConstants.PDF_UA_CONFORMANCE
             );
 
             response = Response.status(HttpStatus.SC_OK).entity(base64Pdf).build();

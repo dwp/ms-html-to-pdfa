@@ -6,7 +6,7 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -38,20 +38,23 @@
     <properties>
         <dwp.encoded-log.version>2.0.3</dwp.encoded-log.version>
 
+        <javax-activation.version>1.1.1</javax-activation.version>
         <google-guava.version>25.0-jre</google-guava.version>
-        <jacoco.version>0.8.2</jacoco.version>
         <jetty.version>9.4.17.v20190418</jetty.version>
-        <openhtml.version>0.0.1-RC17</openhtml.version>
+        <openhtml.version>0.0.1-RC21</openhtml.version>
         <commons-io.version>1.3.2</commons-io.version>
         <maven-shade.version>1.6</maven-shade.version>
         <dropwizard.version>1.3.5</dropwizard.version>
-        <mockito.version>1.10.19</mockito.version>
         <jackson.version>2.9.9.1</jackson.version>
+        <mockito.version>2.24.5</mockito.version>
+        <jacoco.version>0.8.2</jacoco.version>
         <owasp.version>4.0.2</owasp.version>
         <junit.version>4.11</junit.version>
+        <jaxb.version>2.3.0</jaxb.version>
 
         <cucumber-core.version>1.2.4</cucumber-core.version>
         <cucumber-jvm.version>1.0.3</cucumber-jvm.version>
+        <verapdf.version>1.14.102</verapdf.version>
     </properties>
 
     <dependencies>
@@ -123,22 +126,22 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
+            <version>${jaxb.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>2.3.0</version>
+            <version>${jaxb.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.0</version>
+            <version>${jaxb.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1.1</version>
+            <version>${javax-activation.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -174,6 +177,12 @@
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>${cucumber-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.verapdf</groupId>
+            <artifactId>validation-model</artifactId>
+            <version>${verapdf.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -260,8 +269,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

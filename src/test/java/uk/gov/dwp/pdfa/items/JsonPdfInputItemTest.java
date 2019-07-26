@@ -1,7 +1,6 @@
 package uk.gov.dwp.pdfa.items;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.junit.Test;
 
 import java.io.IOException;

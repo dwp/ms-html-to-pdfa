@@ -1,5 +1,8 @@
 package uk.gov.dwp.pdfa.cucumber;
 
+import com.adobe.xmp.XMPException;
+import com.adobe.xmp.impl.VeraPDFMeta;
+import com.adobe.xmp.impl.VeraPDFXMPNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import cucumber.api.java.en.And;
@@ -16,8 +19,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.xml.DomXmpParser;
 import org.apache.xmpbox.xml.XmpParsingException;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.dwp.pdfa.items.PdfExtendedConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,23 +56,28 @@ public class GeneratorSteps {
         assertThat(responseCode, is(equalTo(expectedStatusCode)));
     }
 
-    @And("^the pdf is Base64 encoded and of the type (NONE|PDFA_1_A|PDFA_1_B|PDFA_2_A|PDFA_2_B|PDFA_3_B|PDFA_3_U)?$")
-    public void thePdfIsOfTheTypeAA(String conformanceLevel) throws IOException, XmpParsingException {
-        PdfRendererBuilder.PdfAConformance conformance = PdfRendererBuilder.PdfAConformance.valueOf(conformanceLevel);
+    @And("^the pdf is Base64 encoded and of the type (NONE|PDF_UA|PDFA_1_A|PDFA_1_B|PDFA_2_A|PDFA_2_B|PDFA_3_B|PDFA_3_U)?$")
+    public void thePdfIsOfTheTypeAA(String conformanceLevel) throws IOException, XmpParsingException, XMPException {
         PDDocument pdfDoc = PDDocument.load(Base64.getDecoder().decode(responseString));
 
-        if (conformance.equals(PdfRendererBuilder.PdfAConformance.NONE)) {
+        if (conformanceLevel.equalsIgnoreCase(PdfExtendedConstants.PDF_UA_CONFORMANCE)) {
+            VeraPDFMeta verMeta = VeraPDFMeta.parse(pdfDoc.getDocumentCatalog().getMetadata().exportXMPMetadata());
+            VeraPDFXMPNode item = verMeta.getProperty("http://www.aiim.org/pdfua/ns/id/", "part");
+            assertNotNull("expecting PDFUA conformity", item);
+
+        } else if (conformanceLevel.equalsIgnoreCase(PdfRendererBuilder.PdfAConformance.NONE.toString())) {
             assertNull(pdfDoc.getDocumentCatalog().getMetadata());
 
         } else {
-            assertNotNull(pdfDoc.getDocumentCatalog().getMetadata());
+            PdfRendererBuilder.PdfAConformance level = PdfRendererBuilder.PdfAConformance.valueOf(conformanceLevel);
 
             XMPMetadata xmpMetadata = new DomXmpParser().parse(pdfDoc.getDocumentCatalog().getMetadata().exportXMPMetadata());
-            assertThat(String.format("Should be conformance level %s", conformanceLevel), xmpMetadata.getPDFIdentificationSchema().getConformance(), is(equalTo(conformance.getConformanceValue())));
-            assertThat(xmpMetadata.getPDFIdentificationSchema().getPart(), is(equalTo(conformance.getPart())));
+            Assert.assertThat(String.format("should be conformance level %s", conformanceLevel), xmpMetadata.getPDFIdentificationSchema().getConformance(), CoreMatchers.is(equalTo(level.getConformanceValue())));
+            Assert.assertThat(String.format("should be part %d", level.getPart()), xmpMetadata.getPDFIdentificationSchema().getPart(), CoreMatchers.is(equalTo(level.getPart())));
         }
     }
 
+    @SuppressWarnings("squid:S3776") // allowed complexity for readability
     private String buildJsonBody(Map<String, String> jsonValues) throws IOException {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
