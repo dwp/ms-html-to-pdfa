@@ -1,0 +1,8 @@
+{
+  "app": {
+    "name": "${project.artifactId}",
+    "version": "${project.version}",
+    "build": "${jenkins.build-number}",
+    "build_time": "${maven.build.timestamp}"
+  }
+}

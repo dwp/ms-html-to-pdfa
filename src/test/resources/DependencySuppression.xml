@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
-
+    <suppress>
+        <notes><![CDATA[file name: openhtmltopdf-core-1.0.0.jar]]></notes>
+        <gav regex="true">^com\.openhtmltopdf:openhtmltopdf-core.*$</gav>
+        <cve>CVE-2019-15138</cve>
+    </suppress>
 </suppressions>

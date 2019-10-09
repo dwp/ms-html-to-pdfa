@@ -11,10 +11,16 @@ import uk.gov.dwp.pdfa.application.HtmlToPdfApplication;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
 @RunWith(Cucumber.class)
-@SuppressWarnings({"squid:S2187", "squid:S1118"}) // deliberately has no tests and no private constructor needed
-@CucumberOptions(plugin = "json:target/cucumber-report.json", tags = {})
+@SuppressWarnings({
+  "squid:S2187",
+  "squid:S1118"
+}) // deliberately has no tests and no private constructor needed
+@CucumberOptions(
+    plugin = "json:target/cucumber-report.json",
+    tags = {})
 public class RunCukesTest {
 
-    @ClassRule
-    public static final DropwizardAppRule<Configuration> RULE = new DropwizardAppRule<>(HtmlToPdfApplication.class, resourceFilePath("test.yml"));
+  @ClassRule
+  public static final DropwizardAppRule<Configuration> RULE =
+      new DropwizardAppRule<>(HtmlToPdfApplication.class, resourceFilePath("test.yml"));
 }

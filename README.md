@@ -67,7 +67,7 @@ Returns:-
 * **400** :: Bad or Malformed json document or json elements.  Returns a brief error message as the response body (full error is logged)
 * **500** :: Internal error occurred, bad html or conformance levels, font/colour profile embedding.  Returns a brief error message as the response body (full error is logged)
 
-# Usage notes
+#### Usage notes
 
 For the incoming html there are 2 things to consider.  
 
@@ -106,14 +106,40 @@ eg.
 </html>
 ```
 
-## Common faults
+#### Common faults
 
 * _fonts not embedded correctly_ :: will result in an error reporting `Index: 0, Size: 0` or `Index 0 out-of-bounds for length 0` which, whilst not a very clear, is because the required font is not present in the embedded list array.  All html tags should have an attached font (both normal and monospaced)
 * _links not fully qualified_ :: any references to css or images that have relative paths will fail.  A full, resolvable URL is required.
 * _closing tags_ :: XHTML requires all tags to be terminated, this is easily missed.
 
-# Examples
+## `/version-info`
+
+Endpoint to return a standard JSON document with build information.
+
+* name: the `project.artifactId`
+* version: the `project.version`
+* build: the jenkins build-number
+* build_time: the `maven.build.timestamp`
+
+example output is:-
+
+```
+{
+  "app": {
+    "name": "ms-html-to-pdfa",
+    "version": "1.6.0",
+    "build": "133",
+    "build_time": "2019-09-09T09:58:17Z"
+  }
+}
+```
+
+## Examples
 
 The following will base64 encode the html file contents, call the service, decode the response and write to file on *nix based operating systems
 
 `curl -m 10 -X POST --data '{"page_html":"'$(cat src/test/resources/successfulHtml.html | base64)'"}' http://localhost:6677/generatePdf | base64 -D > test.pdf`
+
+This example will return the current build information
+
+`curl http://localhost:6677/version-info`

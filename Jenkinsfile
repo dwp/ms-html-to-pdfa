@@ -14,7 +14,7 @@ pipeline {
       agent {
         docker {
           reuseNode true
-          image 'nexus.mgmt.health-dev.dwpcloud.uk:5000/agent/java/1.11.0'
+          image "${nexus.dockerPullRepository()}/agent/java/1.11.0"
         }
       }
       steps {
