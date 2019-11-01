@@ -4,40 +4,40 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder.TextDirection;
 import com.openhtmltopdf.pdfboxout.PdfBoxFontResolver;
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import uk.gov.dwp.pdfa.exception.PdfaGeneratorException;
-import uk.gov.dwp.pdfa.items.PdfExtendedConstants;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.dwp.pdfa.exception.PdfaGeneratorException;
+import uk.gov.dwp.pdfa.items.PdfExtendedConstants;
 
 public class HtmlToPdfGenerator {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(HtmlToPdfGenerator.class.getName());
 
   public String createPdfaDocument(
-      String html, String colourProfile, Map<String, String> fontMap, String conformanceLevel)
-      throws PdfaGeneratorException {
+          String html, String colourProfile, Map<String, String> fontMap, String conformanceLevel)
+          throws PdfaGeneratorException {
     try {
       String base64pdf;
 
       try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
-        PdfRendererBuilder pdfBuilder =
-            new PdfRendererBuilder()
-                .defaultTextDirection(TextDirection.LTR)
-                .useColorProfile(getColourProfile(colourProfile))
-                .withHtmlContent(getHtml(html), null)
-                .useFastMode()
-                .toStream(outputStream);
+        PdfRendererBuilder pdfBuilder
+                = new PdfRendererBuilder()
+                        .defaultTextDirection(TextDirection.LTR)
+                        .useColorProfile(getColourProfile(colourProfile))
+                        .withHtmlContent(getHtml(html), null)
+                        .useFastMode()
+                        .toStream(outputStream);
 
         if (useConformanceLevelParameter(conformanceLevel)) {
           LOGGER.info("building pdf to comply with conformance level {}", conformanceLevel);
           pdfBuilder.usePdfAConformance(
-              PdfRendererBuilder.PdfAConformance.valueOf(conformanceLevel));
+                  PdfRendererBuilder.PdfAConformance.valueOf(conformanceLevel));
 
         } else {
           LOGGER.info("building a PDF/UA accessible pdf");
@@ -64,7 +64,7 @@ public class HtmlToPdfGenerator {
   }
 
   private boolean useConformanceLevelParameter(String conformanceLevel)
-      throws PdfaGeneratorException {
+          throws PdfaGeneratorException {
     boolean useConformanceLevel = false;
 
     try {
@@ -72,10 +72,10 @@ public class HtmlToPdfGenerator {
       useConformanceLevel = true;
 
     } catch (Exception e) {
-      if ((conformanceLevel == null)
-          || (!conformanceLevel.equalsIgnoreCase(PdfExtendedConstants.PDF_UA_CONFORMANCE))) {
+      if (conformanceLevel == null
+              || !conformanceLevel.equalsIgnoreCase(PdfExtendedConstants.PDF_UA_CONFORMANCE)) {
         throw new PdfaGeneratorException(
-            String.format("'%s' is not a valid conformance level, aborting", conformanceLevel));
+                String.format("'%s' is not a valid conformance level, aborting", conformanceLevel));
       }
     }
 
@@ -83,15 +83,16 @@ public class HtmlToPdfGenerator {
   }
 
   private void verifyFontApplication(
-      Map<String, String> fontMap, String html, String conformanceLevel)
-      throws PdfaGeneratorException {
-    if ((html != null)
-        && (!conformanceLevel.equalsIgnoreCase(
-            PdfRendererBuilder.PdfAConformance.NONE.toString()))) {
+          Map<String, String> fontMap, String html, String conformanceLevel)
+          throws PdfaGeneratorException {
+    if (html != null
+            && !conformanceLevel.equalsIgnoreCase(
+                    PdfRendererBuilder.PdfAConformance.NONE.toString()
+            )) {
       LOGGER.debug("validate that all fonts in the document are contained in the font map");
 
-      for (String fontHtml :
-          html.lines().filter(p -> p.contains("font-family")).collect(Collectors.toList())) {
+      for (String fontHtml
+              : html.lines().filter(p -> p.contains("font-family")).collect(Collectors.toList())) {
         boolean fontMissing = true;
         fontHtml = fontHtml.trim();
 
@@ -105,9 +106,11 @@ public class HtmlToPdfGenerator {
 
         if (fontMissing) {
           throw new PdfaGeneratorException(
-              String.format(
-                  "html element requests %s.  It is not passed in the font map, cannot encode.",
-                  fontHtml.replace(";", "").trim()));
+                  String.format(
+                      "html element requests %s. It is not passed in the font map, cannot encode.",
+                      fontHtml.replace(";", "").trim()
+                  )
+          );
         }
       }
     }
@@ -119,8 +122,8 @@ public class HtmlToPdfGenerator {
 
   private byte[] getColourProfile(String base64ColourProfile) {
     return base64ColourProfile != null
-        ? Base64.getDecoder().decode(base64ColourProfile.getBytes())
-        : null;
+            ? Base64.getDecoder().decode(base64ColourProfile.getBytes())
+            : null;
   }
 
   private void populateFontResolver(PdfBoxFontResolver fontResolver, Map<String, String> fontMap) {
@@ -130,7 +133,8 @@ public class HtmlToPdfGenerator {
           entry.getKey(),
           null,
           null,
-          false);
+          false
+      );
       LOGGER.debug("adding font '{}' to font map", entry.getKey());
     }
   }

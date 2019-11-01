@@ -35,7 +35,7 @@ pipeline {
       steps {
         script {
           jenkinsAgentDockerBuild {
-            projectName = "shared"
+            projectName = "integn"
             componentName = "ms-html-to-pdfa"
             slackChannel = 'health-pdu-fhajenkins'
           }

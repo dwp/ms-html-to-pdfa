@@ -1,0 +1,10 @@
+include:
+  - project: 'health-pdu/htds/pipeline/ci-scripts'
+    file: 'maven-base.yml'
+  - project: 'health-pdu/htds/pipeline/ci-scripts'
+    file: 'containerise.yml'
+  
+variables:
+  LOCAL_PROJECT_NAME: "integn"
+  LOCAL_COMPONENT_NAME: "ms-html-to-pdfa"
+  ECS_SERVICE_NAME: "htmlpdfa"

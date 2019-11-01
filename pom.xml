@@ -6,7 +6,7 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.7.3</version>
+    <version>1.8.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -48,7 +48,7 @@
         <jackson.version>2.10.0</jackson.version>
         <mockito.version>2.24.5</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
-        <owasp.version>4.0.2</owasp.version>
+        <owasp.version>5.2.1</owasp.version>
         <junit.version>4.11</junit.version>
         <jaxb.version>2.3.0</jaxb.version>
 

@@ -1,18 +1,19 @@
 package uk.gov.dwp.pdfa;
 
+import java.io.IOException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-
 @Path("/version-info")
 public class VersionInformationResource {
-  private static final Logger LOGGER = LoggerFactory.getLogger(VersionInformationResource.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(
+          VersionInformationResource.class.getName()
+  );
 
   @GET
   public Response getVersionInformation() {
