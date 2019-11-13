@@ -12,7 +12,8 @@ public class VersionInformationResourceTest {
   @Test
   public void verifyCorrectEntry() throws IOException {
     VersionInformationResource instance = new VersionInformationResource();
-    JsonNode tree = new ObjectMapper().readTree(instance.getVersionInformation().getEntity().toString());
+    JsonNode tree =
+        new ObjectMapper().readTree(instance.getVersionInformation().getEntity().toString());
 
     assertNotNull(tree.get("app"));
     assertNotNull(tree.get("app").get("name"));

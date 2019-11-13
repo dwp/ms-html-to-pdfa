@@ -25,10 +25,11 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.dwp.pdfa.items.PdfExtendedConstants;
+import uk.gov.dwp.pdf.generator.PdfConformanceLevel;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.Map;
 
@@ -82,9 +83,9 @@ public class GeneratorSteps {
       throws IOException, XmpParsingException, XMPException {
     PDDocument pdfDoc = PDDocument.load(Base64.getDecoder().decode(responseString));
 
-    if (conformanceLevel.equalsIgnoreCase(PdfExtendedConstants.PDF_UA_CONFORMANCE)) {
-      VeraPDFMeta verMeta =
-          VeraPDFMeta.parse(pdfDoc.getDocumentCatalog().getMetadata().exportXMPMetadata());
+    if (conformanceLevel.equalsIgnoreCase(PdfConformanceLevel.PDF_UA.toString())) {
+      InputStream inputStream = pdfDoc.getDocumentCatalog().getMetadata().exportXMPMetadata();
+      VeraPDFMeta verMeta = VeraPDFMeta.parse(fixRdfXml(inputStream));
       VeraPDFXMPNode item = verMeta.getProperty("http://www.aiim.org/pdfua/ns/id/", "part");
       assertNotNull("expecting PDFUA conformity", item);
 
@@ -107,6 +108,17 @@ public class GeneratorSteps {
           xmpMetadata.getPDFIdentificationSchema().getPart(),
           CoreMatchers.is(equalTo(level.getPart())));
     }
+  }
+
+  private InputStream fixRdfXml(final InputStream xmpMetaDataInputStream) throws IOException {
+    /*
+     Without performing this substitution the VeraPDFMeta.parse() call fails with:
+       "com.adobe.xmp.XMPException: Nested content not allowed with rdf:resource or property attributes"
+     Simply having the openhtmltopdf-svg-support library included in the project causes this issue, without it
+     the 'lang' attribute has the 'xml:' namespace prefix and there is no error - no idea why.
+    */
+    final String xmpMetaData = IOUtils.toString(xmpMetaDataInputStream);
+    return IOUtils.toInputStream(xmpMetaData.replaceAll("<rdf:li lang", "<rdf:li xml:lang"));
   }
 
   @SuppressWarnings("squid:S3776") // allowed complexity for readability

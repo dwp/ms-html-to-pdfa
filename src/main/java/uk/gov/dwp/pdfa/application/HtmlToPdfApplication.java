@@ -6,8 +6,8 @@ import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import uk.gov.dwp.pdf.generator.HtmlToPdfFactory;
 import uk.gov.dwp.pdfa.VersionInformationResource;
-import uk.gov.dwp.pdfa.transform.HtmlToPdfGenerator;
 import uk.gov.dwp.pdfa.HtmlToPdfResource;
 
 public class HtmlToPdfApplication extends Application<Configuration> {
@@ -26,7 +26,7 @@ public class HtmlToPdfApplication extends Application<Configuration> {
 
   @Override
   public void run(Configuration configuration, Environment environment) throws Exception {
-    final HtmlToPdfResource instance = new HtmlToPdfResource(new HtmlToPdfGenerator());
+    final HtmlToPdfResource instance = new HtmlToPdfResource(HtmlToPdfFactory.create());
     final VersionInformationResource versionInfo = new VersionInformationResource();
 
     environment.jersey().register(versionInfo);

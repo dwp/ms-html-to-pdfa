@@ -5,6 +5,6 @@ include:
     file: 'containerise.yml'
   
 variables:
-  LOCAL_PROJECT_NAME: "integn"
+  LOCAL_PROJECT_NAME: "fha/integ"
   LOCAL_COMPONENT_NAME: "ms-html-to-pdfa"
-  ECS_SERVICE_NAME: "htmlpdfa"
+  ECS_SERVICE_NAME: "htmlpdf"

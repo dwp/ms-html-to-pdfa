@@ -6,7 +6,7 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.8.0</version>
+    <version>1.9.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -24,7 +24,7 @@
         <developer>
             <name>Chris Hulley</name>
             <organization>DWP</organization>
-            <email>chris.hulley@dwp.gsi.gov.uk</email>
+            <email>chris.hulley@dwp.gov.uk</email>
             <organizationUrl>http://www.gov.uk/dwp</organizationUrl>
         </developer>
     </developers>
@@ -37,6 +37,7 @@
 
     <properties>
         <dwp.encoded-log.version>2.0.3</dwp.encoded-log.version>
+        <dwp.pdf.version>1.0.0</dwp.pdf.version>
 
         <javax-activation.version>1.1.1</javax-activation.version>
         <google-guava.version>25.0-jre</google-guava.version>
@@ -65,6 +66,11 @@
             <groupId>uk.gov.dwp.logging</groupId>
             <artifactId>encoded-logger-output</artifactId>
             <version>${dwp.encoded-log.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.dwp.pdf</groupId>
+            <artifactId>html-to-pdf</artifactId>
+            <version>${dwp.pdf.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

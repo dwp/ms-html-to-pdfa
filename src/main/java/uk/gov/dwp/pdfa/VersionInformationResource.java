@@ -11,9 +11,8 @@ import org.slf4j.LoggerFactory;
 
 @Path("/version-info")
 public class VersionInformationResource {
-  private static final Logger LOGGER = LoggerFactory.getLogger(
-          VersionInformationResource.class.getName()
-  );
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(VersionInformationResource.class.getName());
 
   @GET
   public Response getVersionInformation() {
