@@ -1,7 +1,7 @@
 server:
   applicationConnectors:
   - type: http
-    port: 6677
+    port: ${SERVER_APP_PORT:-6677}
   adminConnectors:
   - type: http
     port: 0

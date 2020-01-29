@@ -43,6 +43,8 @@ public class HtmlToPdfResourceTest {
       "{\"font_map\": {\"tahoma\":\"YmFzZTY0LWZvbnQ=\",\"arial\":\"YmFzZTY0LWZvbnQ=\"}, \"page_html\": \"YmFzZTY0LWh0bWw=\", \"conformance_level\": \"PDFA_1_A\"}";
   private static final String MISSING_FONT_MAP =
       "{\"colour_profile\": \"YmFzZTY0LWNvbG91cg==\", \"page_html\": \"YmFzZTY0LWh0bWw=\", \"conformance_level\": \"PDFA_1_A\"}";
+  private static final String EMPTY_FONT_MAP =
+      "{\"font_map\": {}, \"colour_profile\": \"YmFzZTY0LWNvbG91cg==\", \"page_html\": \"YmFzZTY0LWh0bWw=\", \"conformance_level\": \"PDFA_1_A\"}";
 
   @Mock private HtmlToPdfGenerator htmlToPdfGenerator;
 
@@ -146,6 +148,31 @@ public class HtmlToPdfResourceTest {
     assertThat(Base64.getDecoder().decode(pdfa.getEntity().toString()), is(equalTo(returningPdf)));
     assertThat(
         conformanceLevelCapture.getValue().toString(), is(equalTo(item.getConformanceLevel())));
+
+    assertThat(fontMapCapture.getValue().size(), is(equalTo(2)));
+    assertTrue(fontMapCapture.getValue().containsKey("arial"));
+  }
+
+  @Test
+  public void testPDFAWithEmptyFontMap() throws IOException, PdfaGeneratorException {
+    JsonPdfInputItem item = new ObjectMapper().readValue(EMPTY_FONT_MAP, JsonPdfInputItem.class);
+    byte[] returningPdf = "i-am-a-pdf".getBytes();
+
+    when(htmlToPdfGenerator.createPdfDocument(
+            eq(item.getHtmlDocument()),
+            eq(item.getColourProfile()),
+            fontMapCapture.capture(),
+            conformanceLevelCapture.capture()))
+            .thenReturn(returningPdf);
+
+    HtmlToPdfResource instance = new HtmlToPdfResource(htmlToPdfGenerator);
+    Response pdfa = instance.generatePdfDocument(EMPTY_FONT_MAP);
+
+    assertNotNull(fontMapCapture.getValue());
+    assertThat(pdfa.getStatus(), is(equalTo(HttpStatus.SC_OK)));
+    assertThat(Base64.getDecoder().decode(pdfa.getEntity().toString()), is(equalTo(returningPdf)));
+    assertThat(
+            conformanceLevelCapture.getValue().toString(), is(equalTo(item.getConformanceLevel())));
 
     assertThat(fontMapCapture.getValue().size(), is(equalTo(2)));
     assertTrue(fontMapCapture.getValue().containsKey("arial"));
