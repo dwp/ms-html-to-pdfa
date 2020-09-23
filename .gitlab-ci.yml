@@ -1,10 +1,73 @@
-include:
-  - project: 'health-pdu/htds/pipeline/ci-scripts'
-    file: 'maven-base.yml'
-  - project: 'health-pdu/htds/pipeline/ci-scripts'
-    file: 'containerise.yml'
-  
 variables:
-  LOCAL_PROJECT_NAME: "fha/integ"
-  LOCAL_COMPONENT_NAME: "ms-html-to-pdfa"
-  ECS_SERVICE_NAME: "htmlpdf"
+  # Product
+  PRODUCT: shared
+  GITHUB_REPO_NAME: ms-html-to-pdfa #Used for the open sourcing fragment.
+  # Config
+  BUILD_TYPE: MAVEN
+  MAVEN_IMAGE: "maven:3-jdk-11"
+  MVN_OPTS: "-DLOG_LEVEL=INFO"
+  MVN_CLI_OPTS: "-Dhttp.proxyHost=proxy.local.dwpcloud.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts='localhost|docker|127.0.0.1' -Dhttps.proxyHost=proxy.local.dwpcloud.uk -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts='localhost|docker|127.0.0.1' --batch-mode"
+  # Tactical
+  DEV_BUCKET_URL: "s3://uk.gov.dwp.deploy-artefacts"
+  LOCAL_PROJECT_NAME: shared #Used in the tactical fragments to build artifact destinations. In future these will be deprecated. 
+  LOCAL_COMPONENT_NAME: ms-html-to-pdfa #Used in the tactical fragments to build artifact destinations. In future these will be deprecated. 
+  DOCKER_NEXUS_COMPONENT: ms-html-to-pdfa
+  HTDS_DOCKER_PUSH_REPO: nexus.service.health-dev.dwpcloud.uk:5001
+
+stages:
+  - update-version
+  - code-quality
+  - code-test
+  - application-build
+  - code-analysis
+  - site-report
+  - image-build
+  - container-image-test
+  - image-push
+  - tactical-push-publish
+  - update-project-metadata
+  - pages
+  - open-source
+  - create-schedules
+  
+include:
+  - local: "/gitlab-ci/includes.yml"
+
+required-fragment-check:
+  variables:
+    RULESET: MAVEN_CI
+    YQ_VERSION: "3.3.0"
+
+gitleaks:
+  variables:
+    YQ_VERSION: "3.3.0"
+
+maven-spotbugs:
+  allow_failure: true
+  # Fixing spotbugs will be included in the next functional change to this repository.
+
+checkmarx:
+  allow_failure: true
+
+trivy-container:
+  variables:
+    ACCEPTABLE_HIGH_FAILURE_COUNT: 6 #Added as now using distroless image in Dockerfile which has 6 High Vulnerabilities identified by trivy.
+
+# TODO remove tactical only build once SRE release build process is in place
+artefact-credential-check:
+  before_script: 
+  - |
+    if [[ -z "$PROD_AWS_ACCESS_KEY_ID" || -z "$PROD_AWS_SECRET_ACCESS_KEY" || -z "$PROD_AWS_SESSION_TOKEN" ]]; then 
+       echo -e "***** AWS credentials for PROD artefact deployment have not been supplied, progressing with tactical build only *****"
+    fi
+  only: 
+    - /^[Rr]-.*$/
+  allow_failure: true
+
+create-develop-nightly-schedule:
+  extends: .add-schedule
+  variables:
+    SCHEDULE_NAME: Nightly-Develop-CI-Build
+    SCHEDULE_BRANCH: develop
+    SCHEDULE_CRON: "0 20 * * *"
+    RANDOMIZE_MINS: "true"

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.11.0</version>
+    <version>1.12.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -41,19 +40,28 @@
 
         <javax-activation.version>1.1.1</javax-activation.version>
         <google-guava.version>25.0-jre</google-guava.version>
-        <jetty.version>9.4.17.v20190418</jetty.version>
+        <jetty.version>9.4.30.v20200611</jetty.version>
         <openhtml.version>1.0.0</openhtml.version>
         <commons-io.version>1.3.2</commons-io.version>
         <maven-shade.version>1.6</maven-shade.version>
-        <dropwizard.version>1.3.5</dropwizard.version>
-        <prometheus.version>0.6.0</prometheus.version>
-        <snakeyml.version>1.25</snakeyml.version>
+        <dropwizard.version>2.0.6</dropwizard.version>
+        <prometheus.version>0.8.1</prometheus.version>
+        <snakeyml.version>1.26</snakeyml.version>
         <jackson.version>2.10.0</jackson.version>
         <mockito.version>2.24.5</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
-        <owasp.version>5.2.1</owasp.version>
+        <owasp.version>5.3.1</owasp.version>
         <junit.version>4.11</junit.version>
         <jaxb.version>2.3.0</jaxb.version>
+        <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+        <doxia.version>1.8</doxia.version>
+        <plugin.site.version>3.7.1</plugin.site.version>
+        <plugin.pmd.version>3.10.0</plugin.pmd.version>
+        <plugin.jxr.version>2.5</plugin.jxr.version>
+        <plugin.surefire.version>2.22.0</plugin.surefire.version>
+        <plugin.jacoco.version>0.8.2</plugin.jacoco.version>
+        <plugin.projectinfo.version>2.4</plugin.projectinfo.version>
+        <plugin.spotbugs.version>4.0.0</plugin.spotbugs.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jenkins.build-number>${env.BUILD_NUMBER}</jenkins.build-number>
@@ -64,6 +72,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
         <dependency>
             <groupId>uk.gov.dwp.logging</groupId>
             <artifactId>encoded-logger-output</artifactId>
@@ -132,6 +145,11 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-security</artifactId>
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
@@ -281,6 +299,18 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${plugin.spotbugs.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${plugin.spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
@@ -346,10 +376,8 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>uk.gov.dwp.pdfa.application.HtmlToPdfApplication</mainClass>
                                 </transformer>
                             </transformers>
@@ -362,6 +390,56 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${plugin.site.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-module-markdown</artifactId>
+                        <version>${doxia.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${plugin.projectinfo.version}</version>
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${plugin.jacoco.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${plugin.surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${plugin.jxr.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${owasp.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${plugin.pmd.version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

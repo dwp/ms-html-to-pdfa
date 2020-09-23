@@ -1,0 +1,93 @@
+include:
+    #.pre
+    - project: 'wa-transformation/pipeline-fragments/credential-check'
+      ref: 1-0-0
+      file: 'ci-include-credential-check.yml'
+    - project: 'wa-transformation/pipeline-fragments/fragment-version-check'
+      ref: 1-1-0
+      file: 'ci-include-fragment-version-check.yml'
+    - project: 'wa-transformation/pipeline-fragments/required-fragment-check'
+      ref: 1-5-0
+      file: 'ci-include-required-fragment-check.yml'
+    #update-version
+    - project: 'wa-transformation/pipeline-fragments/update-semver'
+      ref: 3-1-0
+      file: 'ci-include-update-semver.yml'
+    #code-quality
+    - project: 'wa-transformation/pipeline-fragments/gitleaks'
+      ref: 1-4-0
+      file: 'ci-include-gitleaks.yml'
+    - project: 'wa-transformation/pipeline-fragments/shell-check'
+      ref: 2-0-0
+      file: 'ci-include-shell-check.yml'
+    - project: 'wa-transformation/pipeline-fragments/todo-checker'
+      ref: 1-0-1
+      file: 'ci-include-todo-checker.yml'
+    - project: 'wa-transformation/pipeline-fragments/maven-checkstyle-lint'
+      ref: 2-0-0
+      file: 'ci-include-maven-checkstyle-lint.yml'
+    - project: 'wa-transformation/pipeline-fragments/docker-lint'
+      ref: 1-1-0
+      file: 'ci-include-docker-lint.yml'
+    #code-test
+    - project: 'wa-transformation/pipeline-fragments/maven-api-test'
+      ref: 2-0-0
+      file: 'ci-include-maven-api-test.yml'
+    #application-build
+    - project: 'wa-transformation/pipeline-fragments/maven-api-build'
+      ref: 2-0-0
+      file: 'ci-include-maven-api-build.yml'
+    #code-analysis
+    - project: 'wa-transformation/pipeline-fragments/maven-api-pitest'
+      ref: 2-0-0
+      file: 'ci-include-maven-api-pitest.yml'
+    - project: 'wa-transformation/pipeline-fragments/maven-api-spotbugs'
+      ref: 2-1-0
+      file: 'ci-include-maven-api-spotbugs.yml'
+    - project: 'wa-transformation/pipeline-fragments/checkmarx'
+      ref: 1-0-1
+      file: 'ci-include-checkmarx.yml'
+    - project: 'wa-transformation/pipeline-fragments/sonarqube'
+      ref: 3-0-0
+      file: 'ci-include-sonar_scanner.yml'
+    #site-report
+    - project: 'wa-transformation/pipeline-fragments/maven-api-site'
+      ref: 2-0-1
+      file: 'ci-include-maven-api-site.yml'
+    #image-build
+    - project: 'wa-transformation/pipeline-fragments/docker-build'
+      ref: 1-1-0
+      file: 'ci-include-docker-build.yml'
+    #container-image-test
+    - project: 'wa-transformation/pipeline-fragments/sast-container-check'
+      ref: 1-1-0
+      file: 'ci-include-sast-container-check.yml'
+    - project: 'wa-transformation/pipeline-fragments/trivy-container-check'
+      ref: 1-1-1
+      file: 'ci-include-trivy-container-check.yml'
+    - project: 'wa-transformation/pipeline-fragments/container-structure-test'
+      ref: 1-2-0
+      file: 'ci-include-container-structure-test.yml'
+    #image-push
+    - project: 'wa-transformation/pipeline-fragments/push-to-ecr'
+      ref: 3-0-0
+      file: 'ci-include-push-to-ecr.yml'
+    #tactical-push-publish
+    - project: 'wa-transformation/pipeline-fragments/tactical-push'
+      ref: 3-2-0
+      file: 'ci-include-tactical-push.yml'
+    #update-project-metadata
+    - project: 'wa-transformation/pipeline-fragments/create-project-badges'
+      ref: 1-0-2
+      file: 'ci-include-create-project-badges.yml'
+    #pages
+    - project: 'wa-transformation/pipeline-fragments/pages-tech-docs'
+      ref: 1-1-1
+      file: 'ci-include-pages_tech_docs.yml'
+    #open-sourcing
+    - project: 'wa-transformation/pipeline-fragments/open-source'
+      ref: 1-0-0
+      file: 'ci-include-open-source.yml'
+    - project: 'wa-transformation/pipeline-fragments/schedule-creation'
+      ref: 1-1-0
+      file: 'ci-include-schedule-creation.yml'

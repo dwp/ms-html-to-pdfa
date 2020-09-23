@@ -143,3 +143,30 @@ The following will base64 encode the html file contents, call the service, decod
 This example will return the current build information
 
 `curl http://localhost:6677/version-info`
+
+### Continuous Integration (CI) Pipeline
+
+For general information about the CI pipeline on this repository please see documentation at: https://confluence.service.dwpcloud.uk/x/_65dCg
+
+**Pipeline Invocation**
+
+This CI Pipeline now replaces the Jenkins Build CI Process for the `ms-html-to-pdfa`.
+
+Gitlab CI will automatically invoke a pipeline run when pushing to a feature branch (this can be prevented using `[skip ci]` in your commit message if not required).
+
+When a feature branch is merged into `develop` it will automatically start a `develop` pipeline and build the required artifacts.
+
+For production releases please see the release process documented at: https://confluence.service.dwpcloud.uk/pages/viewpage.action?spaceKey=DHWA&title=SRE
+A production release requires a manual pipeline (to be invoked by an SRE) this is only a release function. 
+Production credentials are required.
+
+**localdev Usage**
+
+There is no change to the usage of localdev. The gitlab CI Build process create artifacts using the same naming convention as the old (no longer utilised) Jenkins CI Build process.
+
+Therefore please continue to use `branch-develop` or `branch-f-*` (depending on branch name) for proving any feature changes.
+
+**Access**
+
+While this repository is open internally for read, no one has write access to this repository by default.
+To obtain access to this repository please contact #ask-health-platform within slack and a member will grant the appropriate level of access.

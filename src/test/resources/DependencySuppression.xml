@@ -5,4 +5,17 @@
         <gav regex="true">^com\.openhtmltopdf:openhtmltopdf-core.*$</gav>
         <cve>CVE-2019-15138</cve>
     </suppress>
+
+    <suppress>
+        <notes><![CDATA[file name: logback-throttling-appender-1.1.0.jar]]></notes>
+        <gav regex="true">^io\.dropwizard\.logback:logback-throttling-appender.*$</gav>
+        <cve>CVE-2017-5929</cve>
+    </suppress>
+
+    <suppress>
+        <notes><![CDATA[Suppress due to being no higher version than log4j-over-slf4j-1.7.30.jar]]></notes>
+        <gav regex="true">^org\.slf4j:log4j-over-slf4j.*$</gav>
+        <cve>CVE-2020-9488</cve>
+    </suppress>
+
 </suppressions>
