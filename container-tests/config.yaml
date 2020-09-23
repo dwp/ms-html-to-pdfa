@@ -1,0 +1,12 @@
+
+# Documentation can be found here https://github.com/GoogleContainerTools/container-structure-test
+schemaVersion: "2.0.0"
+
+fileExistenceTests:
+  - name: 'Jar File'
+    path: '/ms-html-to-pdfa.jar'
+    shouldExist: true
+
+
+metadataTest:
+  entrypoint: [ "java", "-jar", "/ms-html-to-pdfa.jar", "server",  "/config.yml"]
