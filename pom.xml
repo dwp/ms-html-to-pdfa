@@ -42,7 +42,7 @@
         <google-guava.version>25.0-jre</google-guava.version>
         <jetty.version>9.4.30.v20200611</jetty.version>
         <openhtml.version>1.0.0</openhtml.version>
-        <commons-io.version>1.3.2</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <maven-shade.version>1.6</maven-shade.version>
         <dropwizard.version>2.0.6</dropwizard.version>
         <prometheus.version>0.8.1</prometheus.version>
