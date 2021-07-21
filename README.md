@@ -15,6 +15,7 @@ Standard maven build.
 NOTE: this application accepts environment variables that will be picked up at runtime (this file is bundled into to container).  If https configuration is needed a modified `config.yml` must be mounted into the container with the appropriate keystore/truststore locations (*see dropwizard documentation*).  
 
     server:
+      applicationContextPath: ${SERVER_CONTEXT_PATH:-/}
       applicationConnectors:
       - type: ${SERVER_APP_CONNECTOR:-http}
         port: ${SERVER_APP_PORT:-6677}
@@ -23,6 +24,34 @@ NOTE: this application accepts environment variables that will be picked up at r
         port: ${SERVER_ADMIN_PORT:-0}
       requestLog:
         type: ${SERVER_REQUEST_LOG_TYPE:-external}
+
+### performance testing
+
+A [k6](https://k6.io/) script is included to satisfy a basic load test. By default, this will target the application running on `localhost`, via the docker hostname `host.docker.internal`. This can be altered by passing an optional `TARGET_HOST` environment variable.
+
+Ensure you have the service running, and execute the test as follows:
+
+```bash
+# Default target: host.docker.internal
+docker run --rm -i --name loadtest \
+  -v $PWD:/k6 \
+  loadimpact/k6 run - < ./load-test/test.js
+
+# Custom target (must be accessible from within the k6 container)
+docker run --rm -i --name loadtest \
+  -e TARGET_HOST=some-target:8080 \
+  -v $PWD:/k6 \
+  loadimpact/k6 run - < ./load-test/test.js
+
+# Change no. virtual users and duration
+docker run --rm -i --name loadtest \
+  -v $PWD:/k6 \
+  loadimpact/k6 run --vus 20 --duration 5m - < ./load-test/test.js
+```
+
+Default configuration and criteria for satisfying performance thresholds are bundled in the test scripts themselves.
+
+For configuring the tests in the CI pipeline, refer to the [official GitLab documentation](https://docs.gitlab.com/ee/user/project/merge_requests/load_performance_testing.html) or [underlying template source](https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Verify/Load-Performance-Testing.gitlab-ci.yml).
 
 ## `/generatePdf`
 POST endpoint receiving the information to build the pdf file
@@ -58,7 +87,7 @@ Pdf conformance levels are detailed [here](https://en.wikipedia.org/wiki/PDF/A#C
 * `PDFA_3_B`
 * `PDFA_3_U`
 * `NONE`
-    
+
 The only **mandatory** parameter is the base64 encoded html.  If only the html is passed a standard colour profile will be used, `arial` (standard) and `courier` (monospace) will be embedded to the pdf and the conformance level for the pdf will be PDF/UA
 
 Returns:-
@@ -69,14 +98,11 @@ Returns:-
 
 #### Usage notes
 
-For the incoming html there are 2 things to consider.  
+For the incoming html there are 2 things to consider.
 
 * The pdf generator requires **XHTML** which requires careful closing of tags (https://www.w3schools.com/html/html_xhtml.asp)
 * In order to satisfy the font requirements of PDFA_1_A document all elements need to reference the font that will be embedded.  This is best achieved by adding a `<STYLE>` element to the `<HEAD>` of the html and to apply it for all items (eg body).  The important point is to make sure that all fonts are explicitly specified in the html document.
 * If using images it is best to encode the images directly into the html.  eg `<img src="data:image/png;base64,<the-base64-encoded-string-of-the-image>"/>`
-* If using images `image-rendering` should be set pixelated or the following error will occur when trying to make any conformance level above NONE :-
-    * https://github.com/veraPDF/veraPDF-validation-profiles/wiki/PDFA-Part-1-rules#rule-624-3
-    * *"If an Image dictionary contains the Interpolate key, its value shall be false"*
 
 eg.
 
@@ -89,9 +115,6 @@ eg.
             }
             body {
                 font-family: 'arial', serif;
-            }
-            img {
-                image-rendering: pixelated;
             }
         </style>
     </head>
