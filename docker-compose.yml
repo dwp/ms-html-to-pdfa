@@ -1,0 +1,29 @@
+version: '3'
+networks:
+  test:
+services:
+  app:
+    container_name: ms-html-to-pdfa
+    image: ${APP_IMAGE}
+    environment:
+      SERVER_CONTEXT_PATH: /
+      SERVER_APP_CONNECTOR: http 
+      SERVER_APP_PORT: 8080
+      SERVER_REQUEST_LOG_TYPE: external
+      LOGGING_TYPE: external
+    networks:
+      - test
+    ports:
+      - '8080:8080'
+
+  component-tests: 
+    image: bash:5
+    command: 
+      - ./src/test/resources/runComponentTests.sh
+    working_dir: /usr/test
+    volumes:
+      - .:/usr/test
+    depends_on:
+      - app
+    networks:
+      - test 

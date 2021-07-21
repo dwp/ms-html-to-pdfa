@@ -3,6 +3,7 @@ package uk.gov.dwp.pdfa.items;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.dwp.pdf.exception.PdfaGeneratorException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,10 @@ public class JsonPdfInputItem {
   public String getHtmlDocument() throws PdfaGeneratorException {
     String html;
     try {
-      html = htmlDocument != null ? new String(Base64.getDecoder().decode(htmlDocument)) : null;
+      html =
+          htmlDocument != null
+              ? new String(Base64.getDecoder().decode(htmlDocument), StandardCharsets.UTF_8)
+              : null;
 
     } catch (IllegalArgumentException e) {
       throw new PdfaGeneratorException(

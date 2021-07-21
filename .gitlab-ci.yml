@@ -9,10 +9,11 @@ variables:
   MVN_CLI_OPTS: "-Dhttp.proxyHost=proxy.local.dwpcloud.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts='localhost|docker|127.0.0.1' -Dhttps.proxyHost=proxy.local.dwpcloud.uk -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts='localhost|docker|127.0.0.1' --batch-mode"
   # Tactical
   DEV_BUCKET_URL: "s3://uk.gov.dwp.deploy-artefacts"
-  LOCAL_PROJECT_NAME: shared #Used in the tactical fragments to build artifact destinations. In future these will be deprecated. 
-  LOCAL_COMPONENT_NAME: ms-html-to-pdfa #Used in the tactical fragments to build artifact destinations. In future these will be deprecated. 
+  LOCAL_PROJECT_NAME: shared #Used in the tactical fragments to build artifact destinations. In future these will be deprecated.
+  LOCAL_COMPONENT_NAME: ms-html-to-pdfa #Used in the tactical fragments to build artifact destinations. In future these will be deprecated.
   DOCKER_NEXUS_COMPONENT: ms-html-to-pdfa
   HTDS_DOCKER_PUSH_REPO: nexus.service.health-dev.dwpcloud.uk:5001
+  REPO_PATTERN: "V3 CI"
 
 stages:
   - update-version
@@ -23,46 +24,59 @@ stages:
   - site-report
   - image-build
   - container-image-test
+  - component-test
   - image-push
   - tactical-push-publish
   - update-project-metadata
+  - generate-api-docs
   - pages
   - open-source
   - create-schedules
-  
+
 include:
   - local: "/gitlab-ci/includes.yml"
+  - template: Verify/Load-Performance-Testing.gitlab-ci.yml
 
 required-fragment-check:
   variables:
     RULESET: MAVEN_CI
-    YQ_VERSION: "3.3.0"
 
-gitleaks:
+.prepare-test: &prepare-test
+  before_script:
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - export APP_IMAGE="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:${CI_COMMIT_SHA:0:8}"
+
+component-test:
+  extends: .docker-compose-run
+  stage: component-test
   variables:
-    YQ_VERSION: "3.3.0"
+    DOCKER_COMPOSE_FILE: "docker-compose.yml"
+    DOCKER_COMPOSE_COMMAND: "--exit-code-from component-tests"
+  <<: *prepare-test
+  after_script:
+    - docker logout
+  artifacts:
+    expire_in: 30 mins
+    paths:
+      - ./component-test/
+    when: always
 
-maven-spotbugs:
-  allow_failure: true
-  # Fixing spotbugs will be included in the next functional change to this repository.
-
-checkmarx:
-  allow_failure: true
-
-trivy-container:
+# Any thresholds are disabled as this shared CI environment will not produce
+# consistent results. Instead, relative performance can be used to identify
+# significant performance changes.
+load_performance:
+  stage: component-test
+  tags:
+    - docker-in-docker-privileged
+  services:
+    - name: docker:20.10.7-dind@sha256:89867815852358a38f503287ed126999c6a943845f8b3e6b89f1111f497a9f23
+      command: ["--registry-mirror=https://docker-cache.nonprod.dwpcloud.uk:5000"]
+    - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHORT_SHA
+      alias: pdfservice
   variables:
-    ACCEPTABLE_HIGH_FAILURE_COUNT: 6 #Added as now using distroless image in Dockerfile which has 6 High Vulnerabilities identified by trivy.
-
-# TODO remove tactical only build once SRE release build process is in place
-artefact-credential-check:
-  before_script: 
-  - |
-    if [[ -z "$PROD_AWS_ACCESS_KEY_ID" || -z "$PROD_AWS_SECRET_ACCESS_KEY" || -z "$PROD_AWS_SESSION_TOKEN" ]]; then 
-       echo -e "***** AWS credentials for PROD artefact deployment have not been supplied, progressing with tactical build only *****"
-    fi
-  only: 
-    - /^[Rr]-.*$/
-  allow_failure: true
+    K6_TEST_FILE: load-test/test.js
+    K6_OPTIONS: "--no-thresholds"
+    K6_DOCKER_OPTIONS: "-e TARGET_HOST=localhost:6677 --network host"
 
 create-develop-nightly-schedule:
   extends: .add-schedule

@@ -1,4 +1,5 @@
 server:
+  applicationContextPath: ${SERVER_CONTEXT_PATH:-/}
   applicationConnectors:
   - type: ${SERVER_APP_CONNECTOR:-http}
     port: ${SERVER_APP_PORT:-6677}
