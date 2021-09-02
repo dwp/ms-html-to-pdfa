@@ -11,49 +11,49 @@ include:
       file: 'ci-include-required-fragment-check.yml'
     #update-version
     - project: 'dwp/engineering/pipeline-fragments/update-semver'
-      ref: 4-1-0
+      ref: 4-2-0
       file: 'ci-include-update-semver.yml'
     #code-quality
     - project: 'dwp/engineering/pipeline-fragments/gitleaks'
       ref: 2-1-2
       file: 'ci-include-gitleaks.yml'
     - project: 'dwp/engineering/pipeline-fragments/shell-check'
-      ref: 3-0-0
+      ref: 3-1-0
       file: 'ci-include-shell-check.yml'
     - project: 'dwp/engineering/pipeline-fragments/todo-checker'
-      ref: 2-0-0
+      ref: 2-1-0
       file: 'ci-include-todo-checker.yml'
     - project: 'dwp/engineering/pipeline-fragments/maven-checkstyle-lint'
-      ref: 3-1-0
+      ref: 3-2-0
       file: 'ci-include-maven-checkstyle-lint.yml'
     - project: 'dwp/engineering/pipeline-fragments/docker-lint'
-      ref: 2-1-0
+      ref: 2-2-0
       file: 'ci-include-docker-lint.yml'
     #code-test
     - project: 'dwp/engineering/pipeline-fragments/maven-api-test'
-      ref: 3-1-0
+      ref: 3-3-0
       file: 'ci-include-maven-api-test.yml'
     #application-build
     - project: 'dwp/engineering/pipeline-fragments/maven-api-build'
-      ref: 3-1-0
+      ref: 3-2-0
       file: 'ci-include-maven-api-build.yml'
     #code-analysis
     - project: 'dwp/engineering/pipeline-fragments/maven-api-pitest'
-      ref: 3-1-0
+      ref: 3-2-0
       file: 'ci-include-maven-api-pitest.yml'
     - project: 'dwp/engineering/pipeline-fragments/maven-api-spotbugs'
-      ref: 3-0-0
+      ref: 3-1-0
       file: 'ci-include-maven-api-spotbugs.yml'
     - project: 'dwp/engineering/pipeline-fragments/sonarqube'
       ref: 4-2-0
       file: 'ci-include-sonar-scanner.yml'
     #site-report
     - project: 'dwp/engineering/pipeline-fragments/maven-api-site'
-      ref: 3-0-0
+      ref: 3-1-0
       file: 'ci-include-maven-api-site.yml'
     #image-build
     - project: 'dwp/engineering/pipeline-fragments/docker-build'
-      ref: 3-0-1
+      ref: 3-1-0
       file: 'ci-include-docker-build.yml'
     #container-image-test
     - project: 'dwp/engineering/pipeline-fragments/sast-container-check'
@@ -71,7 +71,7 @@ include:
       file: 'ci-include-docker-compose-run.yml'
     #image-push
     - project: 'dwp/engineering/pipeline-fragments/push-to-ecr'
-      ref: 4-0-0
+      ref: 4-1-1
       file: 'ci-include-push-to-ecr.yml'
     #tactical-push-publish
     - project: 'dwp/engineering/pipeline-fragments/tactical-push'
@@ -90,5 +90,5 @@ include:
       ref: 2-0-0
       file: 'ci-include-open-source.yml'
     - project: 'dwp/engineering/pipeline-fragments/schedule-creation'
-      ref: 2-1-0
+      ref: 2-2-0
       file: 'ci-include-schedule-creation.yml'

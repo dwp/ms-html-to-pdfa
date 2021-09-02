@@ -19,5 +19,4 @@
         <vulnerabilityName>CVE-2020-11988</vulnerabilityName>
         <cpe>cpe:/a:apache:xmlgraphics_commons</cpe>
     </suppress>
-
 </suppressions>
