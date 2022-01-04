@@ -5,7 +5,7 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.13.1</version>
+    <version>1.13.2</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -29,25 +29,24 @@
     </developers>
 
     <properties>
-        <dwp.encoded-log.version>2.0.3</dwp.encoded-log.version>
+        <dwp.encoded-log.version>2.2.0-3321520b</dwp.encoded-log.version>
         <dwp.pdf.version>1.1.0-35392dcf</dwp.pdf.version>
 
         <javax-activation.version>1.1.1</javax-activation.version>
         <google-guava.version>30.1.1-jre</google-guava.version>
         <commons-io.version>2.8.0</commons-io.version>
         <maven-shade.version>1.6</maven-shade.version>
-        <dropwizard.version>2.0.25</dropwizard.version>
+        <dropwizard.version>2.0.28</dropwizard.version>
         <prometheus.version>0.8.1</prometheus.version>
         <snakeyml.version>1.26</snakeyml.version>
         <jackson.version>2.12.0</jackson.version>
         <mockito.version>2.24.5</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
-        <owasp.version>6.1.6</owasp.version>
+        <owasp.version>6.5.1</owasp.version>
         <junit.version>4.11</junit.version>
         <jaxb.version>2.3.0</jaxb.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <doxia.version>1.8</doxia.version>
-        <jetty.version>9.4.43.v20210629</jetty.version>
         <plugin.site.version>3.7.1</plugin.site.version>
         <plugin.pmd.version>3.10.0</plugin.pmd.version>
         <plugin.jxr.version>2.5</plugin.jxr.version>
@@ -114,26 +113,6 @@
             <groupId>uk.gov.dwp.pdf</groupId>
             <artifactId>html-to-pdf</artifactId>
             <version>${dwp.pdf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-http</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlets</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

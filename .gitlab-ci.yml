@@ -32,6 +32,7 @@ stages:
   - pages
   - open-source
   - create-schedules
+  - repo-gen
 
 include:
   - local: "/gitlab-ci/includes.yml"
