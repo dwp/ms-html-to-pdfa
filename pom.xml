@@ -5,7 +5,7 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.13.3</version>
+    <version>1.13.4</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -34,10 +34,10 @@
 
         <commons-io.version>2.11.0</commons-io.version>
         <plugin.springboot.shade.version>2.6.6</plugin.springboot.shade.version>
-        <dropwizard.version>2.0.28</dropwizard.version>
+        <dropwizard.version>2.1.1</dropwizard.version>
         <prometheus.version>0.15.0</prometheus.version>
-        <jackson.version>2.13.2.2</jackson.version>
-        <mockito.version>4.3.1</mockito.version>
+        <jackson.version>2.13.3</jackson.version>
+        <mockito.version>4.5.1</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
         <owasp.version>6.5.1</owasp.version>
         <junit.version>4.13.2</junit.version>

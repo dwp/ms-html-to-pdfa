@@ -19,4 +19,20 @@
         <vulnerabilityName>CVE-2020-11988</vulnerabilityName>
         <cpe>cpe:/a:apache:xmlgraphics_commons</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: xalan-2.7.2.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/xalan/xalan@.*$</packageUrl>
+        <vulnerabilityName>CVE-2022-34169</vulnerabilityName>
+        <cpe>cpe:2.3:a:apache:xalan-java</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: serializer-2.7.2.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/xalan/serializer@.*$</packageUrl>
+        <vulnerabilityName>CVE-2022-34169</vulnerabilityName>
+        <cpe>ccpe:2.3:a:apache:xalan-java</cpe>
+    </suppress>
 </suppressions>

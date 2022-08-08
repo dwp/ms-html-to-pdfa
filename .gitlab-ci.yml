@@ -45,7 +45,7 @@ required-fragment-check:
 .prepare-test: &prepare-test
   before_script:
     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - export APP_IMAGE="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:${CI_COMMIT_SHA:0:8}"
+    - export APP_IMAGE="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA"
 
 component-test:
   extends: .docker-compose-run
@@ -72,7 +72,7 @@ load_performance:
   services:
     - name: docker:20.10.7-dind@sha256:89867815852358a38f503287ed126999c6a943845f8b3e6b89f1111f497a9f23
       command: ["--registry-mirror=https://docker-cache.nonprod.dwpcloud.uk:5000"]
-    - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHORT_SHA
+    - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
       alias: pdfservice
   variables:
     K6_TEST_FILE: load-test/test.js
