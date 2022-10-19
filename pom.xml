@@ -36,7 +36,7 @@
         <plugin.springboot.shade.version>2.6.6</plugin.springboot.shade.version>
         <dropwizard.version>2.1.1</dropwizard.version>
         <prometheus.version>0.15.0</prometheus.version>
-        <jackson.version>2.13.3</jackson.version>
+        <jackson.version>2.13.4.1</jackson.version>
         <mockito.version>4.5.1</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
         <owasp.version>6.5.1</owasp.version>
