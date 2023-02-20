@@ -6,13 +6,7 @@ variables:
   BUILD_TYPE: MAVEN
   MAVEN_IMAGE: "maven:3-jdk-11"
   MVN_OPTS: "-DLOG_LEVEL=INFO"
-  MVN_CLI_OPTS: "-Dhttp.proxyHost=proxy.local.dwpcloud.uk -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts='localhost|docker|127.0.0.1' -Dhttps.proxyHost=proxy.local.dwpcloud.uk -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts='localhost|docker|127.0.0.1' --batch-mode"
-  # Tactical
-  DEV_BUCKET_URL: "s3://uk.gov.dwp.deploy-artefacts"
-  LOCAL_PROJECT_NAME: shared #Used in the tactical fragments to build artifact destinations. In future these will be deprecated.
-  LOCAL_COMPONENT_NAME: ms-html-to-pdfa #Used in the tactical fragments to build artifact destinations. In future these will be deprecated.
-  DOCKER_NEXUS_COMPONENT: ms-html-to-pdfa
-  HTDS_DOCKER_PUSH_REPO: nexus.service.health-dev.dwpcloud.uk:5001
+  MVN_CLI_OPTS: "--batch-mode"
   REPO_PATTERN: "V3 CI"
 
 stages:
@@ -26,7 +20,6 @@ stages:
   - container-image-test
   - component-test
   - image-push
-  - tactical-push-publish
   - update-project-metadata
   - generate-api-docs
   - pages
@@ -67,17 +60,15 @@ component-test:
 # significant performance changes.
 load_performance:
   stage: component-test
-  tags:
-    - docker-in-docker-privileged
   services:
     - name: docker:20.10.7-dind@sha256:89867815852358a38f503287ed126999c6a943845f8b3e6b89f1111f497a9f23
-      command: ["--registry-mirror=https://docker-cache.nonprod.dwpcloud.uk:5000"]
     - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
       alias: pdfservice
   variables:
+    FF_NETWORK_PER_BUILD: "true"
     K6_TEST_FILE: load-test/test.js
     K6_OPTIONS: "--no-thresholds"
-    K6_DOCKER_OPTIONS: "-e TARGET_HOST=localhost:6677 --network host"
+    K6_DOCKER_OPTIONS: "-e TARGET_HOST=pdfservice:6677 --network=host"
 
 create-develop-nightly-schedule:
   extends: .add-schedule

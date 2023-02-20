@@ -16,7 +16,7 @@ sourcePdfAndCheckStatus () {
 
 echo "Wating for the container to start..."
 status_code=0
-while [ $status_code -ne 200 ]
+while [ "$status_code" -ne 200 ]
 do
   status_code=$(curl -o /dev/null -s -w "%{http_code}\n" http://ms-html-to-pdfa:8080/version-info)
 done
