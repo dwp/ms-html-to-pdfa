@@ -41,7 +41,7 @@
         <jackson.version>2.14.2</jackson.version>
         <mockito.version>4.11.0</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
-        <owasp.version>8.1.1</owasp.version>
+        <owasp.version>7.4.4</owasp.version>
         <junit.version>4.13.2</junit.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <doxia.version>1.8</doxia.version>
