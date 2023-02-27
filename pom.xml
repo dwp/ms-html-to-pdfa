@@ -36,12 +36,12 @@
         <plugin.springboot.shade.version>2.6.6</plugin.springboot.shade.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <batik-dom.version>1.16</batik-dom.version>
-        <dropwizard.version>2.1.4</dropwizard.version>
+        <dropwizard.version>2.1.5</dropwizard.version>
         <prometheus.version>0.16.0</prometheus.version>
-        <jackson.version>2.14.1</jackson.version>
+        <jackson.version>2.14.2</jackson.version>
         <mockito.version>4.11.0</mockito.version>
         <jacoco.version>0.8.2</jacoco.version>
-        <owasp.version>7.4.4</owasp.version>
+        <owasp.version>8.1.1</owasp.version>
         <junit.version>4.13.2</junit.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <doxia.version>1.8</doxia.version>
