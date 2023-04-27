@@ -17,7 +17,7 @@ services:
       - '8080:8080'
 
   component-tests: 
-    image: bash:5
+    image: bash:5@sha256:e0acf0b8fb59c01b6a2b66de360c86bcad5c3cd114db325155970e6bab9663a0
     command: 
       - ./src/test/resources/runComponentTests.sh
     working_dir: /usr/test

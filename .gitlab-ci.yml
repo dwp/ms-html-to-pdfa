@@ -61,7 +61,7 @@ component-test:
 load_performance:
   stage: component-test
   services:
-    - name: docker:20.10.7-dind@sha256:89867815852358a38f503287ed126999c6a943845f8b3e6b89f1111f497a9f23
+    - name: docker:20.10.24-dind@sha256:b848ea12a51f9be34b5ad6774a93a015fee1c2017d1896414c2f8fbaeb0c87d3
     - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
       alias: pdfservice
   variables:

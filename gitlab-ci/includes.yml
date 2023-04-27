@@ -4,7 +4,7 @@ include:
       ref: 2-3-1
       file: 'ci-include-credential-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/fragment-version-check'
-      ref: 2-3-5
+      ref: 2-3-6
       file: 'ci-include-fragment-version-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/required-fragment-check'
       ref: 2-9-2
@@ -15,7 +15,7 @@ include:
       file: 'ci-include-update-semver.yml'
     #code-quality
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/gitleaks'
-      ref: 2-2-3
+      ref: 2.2.4
       file: 'ci-include-gitleaks.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/shell-check'
       ref: 3-1-4
@@ -53,17 +53,17 @@ include:
       file: 'ci-include-maven-api-site.yml'
     #image-build
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-build'
-      ref: 4-0-1
+      ref: 4.2.0
       file: 'ci-include-docker-build.yml'
     #container-image-test
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/sast-container-check'
-      ref: 2-7-2
+      ref: 2-8-1
       file: 'ci-include-sast-container-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/trivy-container-check'
-      ref: 2-14-1
+      ref: 2-14-2
       file: 'ci-include-trivy-container-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/container-structure-test'
-      ref: 2-7-0
+      ref: 2.8.1
       file: 'ci-include-container-structure-test.yml'
     #component-test
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-compose-run'
@@ -71,7 +71,7 @@ include:
       file: 'ci-include-docker-compose-run.yml'
     #image-push
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/push-to-ecr'
-      ref: 4-5-0
+      ref: 4.6.1
       file: 'ci-include-push-to-ecr.yml'
     #update-project-metadata
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/create-project-badges'
