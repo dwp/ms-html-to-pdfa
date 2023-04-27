@@ -34,7 +34,7 @@
 
         <commons-io.version>2.11.0</commons-io.version>
         <plugin.springboot.shade.version>2.7.11</plugin.springboot.shade.version>
-        <snakeyaml.version>1.33</snakeyaml.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <batik-dom.version>1.16</batik-dom.version>
         <dropwizard.version>2.1.6</dropwizard.version>
         <prometheus.version>0.16.0</prometheus.version>
