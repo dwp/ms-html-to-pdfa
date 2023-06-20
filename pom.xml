@@ -36,7 +36,7 @@
         <plugin.springboot.shade.version>2.7.11</plugin.springboot.shade.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <batik-dom.version>1.16</batik-dom.version>
-        <dropwizard.version>2.1.6</dropwizard.version>
+        <dropwizard.version>2.1.7</dropwizard.version>
         <prometheus.version>0.16.0</prometheus.version>
         <jackson.version>2.15.0</jackson.version>
         <mockito.version>4.11.0</mockito.version>
@@ -266,7 +266,7 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.7</version>
                 <configuration>
-                    <check></check>
+                    <check/>
                     <formats>
                         <format>xml</format>
                     </formats>
