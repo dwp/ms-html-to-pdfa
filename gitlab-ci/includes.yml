@@ -4,10 +4,10 @@ include:
       ref: 2-3-1
       file: 'ci-include-credential-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/fragment-version-check'
-      ref: 2-3-6
+      ref: 2.3.7
       file: 'ci-include-fragment-version-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/required-fragment-check'
-      ref: 2-9-2
+      ref: 2-10-0
       file: 'ci-include-required-fragment-check.yml'
     #update-version
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/update-semver'
@@ -27,7 +27,7 @@ include:
       ref: 3-3-4
       file: 'ci-include-maven-checkstyle-lint.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-lint'
-      ref: 2-4-2
+      ref: 2.5.1
       file: 'ci-include-docker-lint.yml'
     #code-test
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-test'
@@ -53,14 +53,14 @@ include:
       file: 'ci-include-maven-api-site.yml'
     #image-build
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-build'
-      ref: 4.2.0
+      ref: 4.4.1
       file: 'ci-include-docker-build.yml'
     #container-image-test
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/sast-container-check'
-      ref: 2-8-1
+      ref: 2.10.1
       file: 'ci-include-sast-container-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/trivy-container-check'
-      ref: 2-14-2
+      ref: 2.15.1
       file: 'ci-include-trivy-container-check.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/container-structure-test'
       ref: 2.8.1
@@ -75,7 +75,7 @@ include:
       file: 'ci-include-push-to-ecr.yml'
     #update-project-metadata
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/create-project-badges'
-      ref: 2-2-1
+      ref: 2.3.0
       file: 'ci-include-create-project-badges.yml'
     #pages
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/pages-tech-docs'
@@ -83,12 +83,12 @@ include:
       file: 'ci-include-pages_tech_docs.yml'
     #open-sourcing
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/open-source'
-      ref: 2-0-1
+      ref: 2.2.2
       file: 'ci-include-open-source.yml'
     - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/schedule-creation'
-      ref: 2-3-3
+      ref: 2.4.0
       file: 'ci-include-schedule-creation.yml'
-    #repo-gen
-    - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/apply-repo-config'
-      ref: 1-1-1
-      file: 'ci-include-apply-repo-config.yml'
+    #live-compliance
+    - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/live-compliance-check'
+      ref: 1.0.0
+      file: 'ci-include-live-compliance.yml'

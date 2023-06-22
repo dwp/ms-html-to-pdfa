@@ -4,7 +4,7 @@ variables:
   GITHUB_REPO_NAME: ms-html-to-pdfa #Used for the open sourcing fragment.
   # Config
   BUILD_TYPE: MAVEN
-  MAVEN_IMAGE: "maven:3-jdk-11"
+  MAVEN_IMAGE: "maven:3-amazoncorretto-17"
   MVN_OPTS: "-DLOG_LEVEL=INFO"
   MVN_CLI_OPTS: "--batch-mode"
   REPO_PATTERN: "V3 CI"
@@ -25,7 +25,6 @@ stages:
   - pages
   - open-source
   - create-schedules
-  - repo-gen
 
 include:
   - local: "/gitlab-ci/includes.yml"

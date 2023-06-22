@@ -1,7 +1,8 @@
 package uk.gov.dwp.pdfa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpStatus;
+import jakarta.ws.rs.core.Response;
+import org.apache.hc.core5.http.HttpStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -13,7 +14,6 @@ import uk.gov.dwp.pdf.generator.HtmlToPdfGenerator;
 import uk.gov.dwp.pdf.generator.PdfConformanceLevel;
 import uk.gov.dwp.pdfa.items.JsonPdfInputItem;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
@@ -21,12 +21,10 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 

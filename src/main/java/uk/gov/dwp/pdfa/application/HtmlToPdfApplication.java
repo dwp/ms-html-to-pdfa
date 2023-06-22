@@ -1,14 +1,15 @@
 package uk.gov.dwp.pdfa.application;
 
-import io.dropwizard.Application;
-import io.dropwizard.Configuration;
+import com.codahale.metrics.MetricRegistry;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.Application;
+import io.dropwizard.core.Configuration;
+import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.core.setup.Environment;
+import io.dropwizard.metrics.servlets.MetricsServlet;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.dropwizard.DropwizardExports;
-import io.prometheus.client.exporter.MetricsServlet;
 import uk.gov.dwp.pdf.generator.HtmlToPdfFactory;
 import uk.gov.dwp.pdfa.VersionInformationResource;
 import uk.gov.dwp.pdfa.HtmlToPdfResource;
@@ -32,11 +33,9 @@ public class HtmlToPdfApplication extends Application<Configuration> {
     final HtmlToPdfResource instance = new HtmlToPdfResource(HtmlToPdfFactory.create());
     final VersionInformationResource versionInfo = new VersionInformationResource();
 
-    final CollectorRegistry collectorRegistry = new CollectorRegistry();
-    collectorRegistry.register(new DropwizardExports(environment.metrics()));
     environment
         .admin()
-        .addServlet("metrics", new MetricsServlet(collectorRegistry))
+        .addServlet("metrics", new MetricsServlet(environment.metrics()))
         .addMapping("/metrics");
 
     environment.jersey().register(versionInfo);

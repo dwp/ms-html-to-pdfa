@@ -1,22 +1,23 @@
 package uk.gov.dwp.pdfa.cucumber;
 
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.verapdf.xmp.XMPException;
 import org.verapdf.xmp.impl.VeraPDFMeta;
 import org.verapdf.xmp.impl.VeraPDFXMPNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.xml.DomXmpParser;
@@ -30,6 +31,8 @@ import uk.gov.dwp.pdf.generator.PdfConformanceLevel;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Map;
 
@@ -47,17 +50,17 @@ public class GeneratorSteps {
   @When(
       "^I post to the service url \"([^\"]*)\" with json constructed from the following source data$")
   public void iPostToTheServiceUrlWithTheFollowingJsonBody(
-      String url, Map<String, String> jsonValues) throws IOException {
+      String url, Map<String, String> jsonValues) throws IOException, ParseException, URISyntaxException {
     performStandardHttpPostWithBody(url, buildJsonBody(jsonValues));
   }
 
   @When("^I hit the service url \"([^\"]*)\" with a GET request$")
-  public void iHitTheServiceWithAGetRequest(String url) throws IOException {
+  public void iHitTheServiceWithAGetRequest(String url) throws IOException, URISyntaxException, ParseException {
     performStandardGet(url);
   }
 
   @When("^I hit the service url \"([^\"]*)\" with a POST request$")
-  public void iHitTheServiceWithAPostRequest(String url) throws IOException {
+  public void iHitTheServiceWithAPostRequest(String url) throws IOException, ParseException, URISyntaxException {
     performStandardHttpPostWithBody(url, null);
   }
 
@@ -68,7 +71,7 @@ public class GeneratorSteps {
   }
 
   @When("^I post to the service url \"([^\"]*)\" with bad json$")
-  public void iPostToTheServiceUrlWithTheFollowingJson(String url) throws IOException {
+  public void iPostToTheServiceUrlWithTheFollowingJson(String url) throws IOException, ParseException, URISyntaxException {
     performStandardHttpPostWithBody(url, "\"bad\":\"json}");
   }
 
@@ -99,11 +102,11 @@ public class GeneratorSteps {
 
       XMPMetadata xmpMetadata =
           new DomXmpParser().parse(pdfDoc.getDocumentCatalog().getMetadata().exportXMPMetadata());
-      Assert.assertThat(
+      assertThat(
           String.format("should be conformance level %s", conformanceLevel),
           xmpMetadata.getPDFIdentificationSchema().getConformance(),
           CoreMatchers.is(equalTo(level.getConformanceValue())));
-      Assert.assertThat(
+      assertThat(
           String.format("should be part %d", level.getPart()),
           xmpMetadata.getPDFIdentificationSchema().getPart(),
           CoreMatchers.is(equalTo(level.getPart())));
@@ -117,8 +120,8 @@ public class GeneratorSteps {
      Simply having the openhtmltopdf-svg-support library included in the project causes this issue, without it
      the 'lang' attribute has the 'xml:' namespace prefix and there is no error - no idea why.
     */
-    final String xmpMetaData = IOUtils.toString(xmpMetaDataInputStream);
-    return IOUtils.toInputStream(xmpMetaData.replaceAll("<rdf:li lang", "<rdf:li xml:lang"));
+    final String xmpMetaData = IOUtils.toString(xmpMetaDataInputStream, Charset.defaultCharset());
+    return IOUtils.toInputStream(xmpMetaData.replaceAll("<rdf:li lang", "<rdf:li xml:lang"), Charset.defaultCharset());
   }
 
   @SuppressWarnings("squid:S3776") // allowed complexity for readability
@@ -169,7 +172,7 @@ public class GeneratorSteps {
     return builder.append("}").toString();
   }
 
-  private void performStandardHttpPostWithBody(String uri, String body) throws IOException {
+  private void performStandardHttpPostWithBody(String uri, String body) throws IOException, ParseException, URISyntaxException {
     HttpPost httpUriRequest = new HttpPost(uri);
     if (null != body) {
       HttpEntity entity = new StringEntity(body);
@@ -179,22 +182,22 @@ public class GeneratorSteps {
     try (CloseableHttpResponse response =
         HttpClientBuilder.create().build().execute(httpUriRequest)) {
       responseString = EntityUtils.toString(response.getEntity());
-      responseCode = response.getStatusLine().getStatusCode();
+      responseCode = response.getCode();
     }
 
-    String urlString = httpUriRequest.getURI().toASCIIString();
+    String urlString = httpUriRequest.getUri().toASCIIString();
     LOG.info("Executed HTTP Post for {} with response {}", urlString, responseCode);
   }
 
-  private void performStandardGet(String uri) throws IOException {
+  private void performStandardGet(String uri) throws IOException, URISyntaxException, ParseException {
     HttpGet get = new HttpGet(uri);
 
     try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(get)) {
       responseString = EntityUtils.toString(response.getEntity());
-      responseCode = response.getStatusLine().getStatusCode();
+      responseCode =response.getCode();
     }
 
-    String urlString = get.getURI().toASCIIString();
+    String urlString = get.getUri().toASCIIString();
     LOG.info("Executed HTTP GET for {} with response {}", urlString, responseCode);
   }
 }

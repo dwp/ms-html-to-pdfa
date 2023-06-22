@@ -1,11 +1,13 @@
 package uk.gov.dwp.pdfa;
 
 import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import java.nio.charset.Charset;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +20,8 @@ public class VersionInformationResource {
   public Response getVersionInformation() {
     Response response;
     try {
-
-      String output = IOUtils.toString(getClass().getResourceAsStream("/public/info.json"));
+      String output = IOUtils.toString(getClass().getResourceAsStream("/public/info.json"),
+              Charset.defaultCharset());
       LOGGER.debug("returning application build info");
       response = Response.ok().entity(output).build();
 
