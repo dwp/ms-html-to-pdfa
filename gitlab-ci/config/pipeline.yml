@@ -1,0 +1,65 @@
+########################################################################################
+###   Pipeline configuration using 'workflow' - variables for each pipeline to be    ###
+###   set in the relevant condition                                                  ###
+########################################################################################
+
+workflow:
+  rules:
+    ####################################################################################
+    ### DON'T RUN ON MERGE REQUEST EVENTS                                            ###
+    ####################################################################################
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    ####################################################################################
+    ### FEATURE BRANCHES                                                             ###
+    ####################################################################################
+    - if: '$CI_COMMIT_REF_NAME =~ /^[Ff]-.*$/ && $CI_PIPELINE_SOURCE != "schedule"'
+      changes:
+        compare_to: refs/heads/develop
+        paths: ['**/*']
+      variables:
+        ENVIRONMENT: 'nonprodacct'
+      when: always
+    ####################################################################################
+    ### DEFAULT BRANCH                                                               ###
+    ####################################################################################
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "web"'
+      variables:
+        ENVIRONMENT: 'nonprodacct'
+      when: always
+    ####################################################################################
+    ### RELEASE BRANCHES - NONPROD CREDS                                             ###
+    ####################################################################################
+    - if: '$CI_COMMIT_REF_NAME =~ /^[Rr]-.*$/ && $CI_PIPELINE_SOURCE != "schedule" && $PROD_AWS_ACCESS_KEY_ID == null && $PROD_AWS_SECRET_ACCESS_KEY == null && $PROD_AWS_SESSION_TOKEN == null'
+      variables:
+        ENVIRONMENT: 'nonprodacct'
+      when: always
+    ####################################################################################
+    ### RELEASE BRANCHES - PROD CREDS                                                ###
+    ####################################################################################
+    - if: '$CI_COMMIT_REF_NAME =~ /^[Rr]-.*$/ && $CI_PIPELINE_SOURCE == "web" && $PROD_AWS_ACCESS_KEY_ID && $PROD_AWS_SECRET_ACCESS_KEY && $PROD_AWS_SESSION_TOKEN'
+      variables:
+        ENVIRONMENT: 'prodacct'
+        # job triggers
+        VERSION: "true"
+      when: always
+    ####################################################################################
+    ### NIGHTLY BUILD SCHEDULE                                                       ###
+    ####################################################################################
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "schedule"'
+      variables:
+        ENVIRONMENT: 'nonprodacct'
+        # job triggers
+        DOCUMENTATION: "true"
+      when: always
+    ####################################################################################
+    ### MERGE TO DEVELOP                                                             ###
+    ####################################################################################
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"' # the only push to default branch is on merge
+      variables:
+        ENVIRONMENT: 'nonprodacct'
+        # job triggers
+        MERGE_TO_DEVELOP: "true"
+        DOCUMENTATION: "true"
+      when: always
+    - when: never

@@ -1,0 +1,41 @@
+########################################################################################
+###    Jobs to assert the quality of commited code                                   ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.build: &build
+  rules:
+    - if: $BUILD_TYPE
+
+.build-not-merge: &build-not-merge
+  rules:
+    - if: $BUILD_TYPE && $MERGE_TO_DEVELOP == null
+
+### CHECKS
+todo-check:
+  extends: .todo-check-template
+  <<: *environment
+  <<: *build
+  needs: []
+
+shell-check:
+  extends: .shell-check-template
+  <<: *environment
+  <<: *build-not-merge
+  needs: []
+
+### SECURITY
+gitleaks:
+  extends: .gitleaks-template
+  variables:
+    FRAGMENT_INCLUDE_PATH: "$CI_PROJECT_DIR/gitlab-ci/config/fragments.yml"
+    GITLEAKS_INCLUDE_FILE: "ci-include-gitleaks-base.yml"
+  <<: *environment
+  <<: *build-not-merge
+  needs: []

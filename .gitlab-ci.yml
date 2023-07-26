@@ -1,78 +1,28 @@
-variables:
-  # Product
-  PRODUCT: shared
-  GITHUB_REPO_NAME: ms-html-to-pdfa #Used for the open sourcing fragment.
-  # Config
-  BUILD_TYPE: MAVEN
-  MAVEN_IMAGE: "maven:3-amazoncorretto-17"
-  MVN_OPTS: "-DLOG_LEVEL=INFO"
-  MVN_CLI_OPTS: "--batch-mode"
-  REPO_PATTERN: "V3 CI"
-
-stages:
-  - update-version
-  - code-quality
-  - code-test
-  - application-build
-  - code-analysis
-  - site-report
-  - image-build
-  - container-image-test
-  - component-test
-  - image-push
-  - update-project-metadata
-  - generate-api-docs
-  - pages
-  - open-source
-  - create-schedules
+########################################################################################
+###   Entrypoint yaml for the CI pipelines - use this to define:                     ###
+###     - pipeline includes for all config and jobs                                  ###
+########################################################################################
 
 include:
-  - local: "/gitlab-ci/includes.yml"
-  - template: Verify/Load-Performance-Testing.gitlab-ci.yml
-
-required-fragment-check:
-  variables:
-    RULESET: MAVEN_CI
-
-.prepare-test: &prepare-test
-  before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - export APP_IMAGE="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA"
-
-component-test:
-  extends: .docker-compose-run
-  stage: component-test
-  variables:
-    DOCKER_COMPOSE_FILE: "docker-compose.yml"
-    DOCKER_COMPOSE_COMMAND: "--exit-code-from component-tests"
-  <<: *prepare-test
-  after_script:
-    - docker logout
-  artifacts:
-    expire_in: 30 mins
-    paths:
-      - ./component-test/
-    when: always
-
-# Any thresholds are disabled as this shared CI environment will not produce
-# consistent results. Instead, relative performance can be used to identify
-# significant performance changes.
-load_performance:
-  stage: component-test
-  services:
-    - name: docker:20.10.24-dind@sha256:b848ea12a51f9be34b5ad6774a93a015fee1c2017d1896414c2f8fbaeb0c87d3
-    - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
-      alias: pdfservice
-  variables:
-    FF_NETWORK_PER_BUILD: "true"
-    K6_TEST_FILE: load-test/test.js
-    K6_OPTIONS: "--no-thresholds"
-    K6_DOCKER_OPTIONS: "-e TARGET_HOST=pdfservice:6677 --network=host"
-
-create-develop-nightly-schedule:
-  extends: .add-schedule
-  variables:
-    SCHEDULE_NAME: Nightly-Develop-CI-Build
-    SCHEDULE_BRANCH: develop
-    SCHEDULE_CRON: "0 20 * * *"
-    RANDOMIZE_MINS: "true"
+  # config
+  - local: "/gitlab-ci/config/fragments.yml"
+  - local: "/gitlab-ci/config/stages.yml"
+  - local: "/gitlab-ci/config/constants.yml"
+  - local: "/gitlab-ci/config/pipeline.yml"
+  # standards
+  - local: "/gitlab-ci/jobs/pipeline-compliance.yml"
+  - local: "/gitlab-ci/jobs/code-quality.yml"
+  # maven
+  - local: "/gitlab-ci/jobs/java-maven.yml"
+  # analysis
+  - local: "/gitlab-ci/jobs/code-analysis.yml"
+  # docker
+  - local: "/gitlab-ci/jobs/docker.yml"
+  # test
+  - local: "/gitlab-ci/jobs/test.yml"
+  # docs
+  - local: "/gitlab-ci/jobs/documentation.yml"
+  # schedules
+  - local: "/gitlab-ci/jobs/schedules.yml"
+  # release
+  - local: "/gitlab-ci/jobs/version.yml"

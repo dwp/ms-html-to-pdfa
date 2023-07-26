@@ -1,0 +1,43 @@
+########################################################################################
+###    Jobs to ensure pipeline compliance                                            ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+    
+### TRIGGERS
+.build-not-merge: &build-not-merge
+  rules:
+    - if: $BUILD_TYPE && $MERGE == null
+
+.credentials: &credentials
+  rules:
+    - if: $PROD_AWS_ACCESS_KEY_ID && $PROD_AWS_SECRET_ACCESS_KEY && $PROD_AWS_SESSION_TOKEN
+
+### CREDENTIALS
+credential-check:
+  extends: .artefact-credential-check-template
+  <<: *environment
+  <<: *credentials
+  needs: []
+
+### COMPLIANCE
+required-fragment-check:
+  extends: .required-fragment-check-template
+  variables:
+    RULESET: MAVEN_CI
+    FRAGMENT_INCLUDE_PATH: "$CI_PROJECT_DIR/gitlab-ci/config/fragments.yml"
+  <<: *environment
+  <<: *build-not-merge
+  needs: []
+
+fragment-version-check:
+  extends: .fragment-version-check-template
+  variables:
+    FRAGMENT_INCLUDE_PATH: "$CI_PROJECT_DIR/gitlab-ci/config/fragments.yml"
+  <<: *environment
+  <<: *build-not-merge
+  needs: []

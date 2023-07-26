@@ -1,0 +1,25 @@
+########################################################################################
+###    Jobs to add project schedules                                                 ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.merge-to-develop: &merge-to-develop
+  rules:
+    - if: $MERGE_TO_DEVELOP == "true"
+
+### SCHEDULES
+create-nightly-develop-build-schedule:
+  extends: .add-schedule-template
+  variables:
+    SCHEDULE_NAME: nightly-develop-build
+    SCHEDULE_BRANCH: develop
+    SCHEDULE_CRON: "00 20 * * 0-4"
+    RANDOMIZE_MINS: "true"
+  <<: *environment
+  <<: *merge-to-develop

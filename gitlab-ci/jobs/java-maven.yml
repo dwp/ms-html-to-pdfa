@@ -1,0 +1,54 @@
+########################################################################################
+###    Jobs specific to maven projects including:                                    ###
+###      - code lint                                                                 ###
+###      - unit test                                                                 ###
+###      - code audit                                                                ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.maven-build: &maven-build
+  rules:
+    - if: $BUILD_TYPE == "MAVEN"
+
+.maven-not-merge: &maven-not-merge
+  rules:
+    - if: $BUILD_TYPE == "MAVEN" && $MERGE_TO_DEVELOP == null
+
+### LINT
+maven-lint:
+  extends: .maven-lint-template
+  <<: *environment
+  <<: *maven-not-merge
+  needs: []
+
+### TEST
+maven-verify:
+  extends: .maven-verify-template
+  <<: *environment
+  <<: *maven-build
+  needs: []
+
+maven-pitest:
+  extends: .maven-pitest-template
+  <<: *environment
+  <<: *maven-build
+
+### PACKAGE
+maven-package:
+  extends: .maven-package-template
+  <<: *environment
+  <<: *maven-build
+  needs: [maven-verify]
+
+### SCAN
+maven-spotbugs:
+  extends: .maven-spotbugs-template
+  <<: *environment
+  <<: *maven-build
+  needs: [maven-verify]

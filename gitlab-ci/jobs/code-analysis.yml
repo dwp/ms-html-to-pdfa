@@ -1,0 +1,20 @@
+########################################################################################
+###    Jobs to analyse committed code                                                ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.build: &build
+  rules:
+    - if: $BUILD_TYPE
+
+### CODE ANALYSIS
+semgrep-sast:
+  stage: code-analysis
+  <<: *environment
+  <<: *build

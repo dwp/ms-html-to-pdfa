@@ -1,0 +1,120 @@
+########################################################################################
+###    Jobs specific to docker builds                                                ###
+###      - linting                                                                   ###
+###      - image build                                                               ###
+###      - image test                                                                ###
+###      - image push                                                                ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.docker-build: &docker-build
+  rules:
+    - if: $BUILD_TYPE
+
+.docker-not-merge: &docker-not-merge
+  rules:
+    - if: $BUILD_TYPE && $MERGE_TO_DEVELOP == null
+
+.docker-build-only-prod: &docker-build-only-prod
+  rules:
+    - if: $BUILD_TYPE && $PROD_AWS_ACCESS_KEY_ID && $PROD_AWS_SECRET_ACCESS_KEY && $PROD_AWS_SESSION_TOKEN
+
+### LINT
+docker-lint:
+  extends: .docker-lint-template
+  <<: *environment
+  <<: *docker-not-merge
+  needs: []
+
+### BUILD
+docker-build:
+  extends: .docker-build-template
+  variables:
+    ADD_LATEST_TAG: "true"
+    DOCKER_CLI_ARGS: "--build-arg GITLAB_REGISTRY_TOKEN=${GITLAB_REGISTRY_TOKEN}"
+  <<: *environment
+  <<: *docker-build
+  needs: [maven-package]
+
+### IMAGE TEST
+sast-container:
+  extends: .sast-container-base
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - scheduler_failure
+  <<: *environment
+  <<: *docker-build
+  needs: [docker-build]
+
+trivy-container:
+  extends: .trivy-container-base
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - scheduler_failure
+  <<: *environment
+  <<: *docker-build
+  needs: [docker-build]
+
+container-test-command:
+  extends: .container-test-template
+  <<: *environment
+  <<: *docker-build
+  needs: [docker-build]
+
+### IMAGE PUSH
+push-to-ecr-nonprodaws:
+  extends: .push-to-ecr
+  variables:
+    ACCOUNT_ID: $DEV_ACCOUNT_ID
+  <<: *environment
+  <<: *docker-build
+
+push-to-ecr-shared-nonprodaws:
+  extends: .push-to-ecr
+  before_script:
+  - |
+    echo "Setting shared account non-production credentials..."
+    export AWS_ACCESS_KEY_ID=$SHARED_AWS_ACCESS_KEY_ID
+    export AWS_SECRET_ACCESS_KEY=$SHARED_AWS_SECRET_ACCESS_KEY
+  variables:
+    ACCOUNT_ID: $NONPROD_SHARED_ACCOUNT_ID
+  <<: *environment
+  <<: *docker-build
+
+push-to-ecr-prodaws:
+  extends: .push-to-ecr
+  before_script:
+  - |
+    echo "Setting production credentials..."
+    export AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID
+    export AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY
+    export AWS_SESSION_TOKEN=$PROD_AWS_SESSION_TOKEN
+  variables:
+    ACCOUNT_ID: $PROD_ACCOUNT_ID
+  <<: *environment
+  <<: *docker-build-only-prod
+
+push-to-ecr-shared-prodaws:
+  extends: .push-to-ecr
+  before_script:
+  - |
+    echo "Setting shared account production credentials..."
+    export AWS_ACCESS_KEY_ID=$SHARED_PROD_AWS_ACCESS_KEY_ID
+    export AWS_SECRET_ACCESS_KEY=$SHARED_PROD_AWS_SECRET_ACCESS_KEY
+    export AWS_SESSION_TOKEN=$SHARED_PROD_AWS_SESSION_TOKEN
+  variables:
+    ACCOUNT_ID: $PROD_SHARED_ACCOUNT_ID
+  <<: *environment
+  <<: *docker-build-only-prod

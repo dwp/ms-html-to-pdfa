@@ -1,0 +1,28 @@
+########################################################################################
+###    Jobs to add project documentation                                             ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+    
+### TRIGGERS
+.documentation: &documentation
+  rules:
+    - if: $DOCUMENTATION == "true"
+
+### METADATA
+create-project-badges:
+  extends: .create-project-badges-template
+  dependencies:
+    - todo-check
+  <<: *environment
+  <<: *documentation
+
+# Creates pages tech docs
+pages:
+  extends: .pages-11ty-template
+  <<: *environment
+  <<: *documentation

@@ -1,0 +1,20 @@
+########################################################################################
+###    Jobs to update the code version                                               ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.version: &version
+  rules:
+    - if: $VERSION == "true"
+
+### UPDATE VERSION
+check-semver:
+  extends: .check-semver-maven-template
+  <<: *environment
+  <<: *version

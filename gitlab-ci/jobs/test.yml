@@ -1,0 +1,55 @@
+########################################################################################
+###    Jobs to test built code                                                       ###
+########################################################################################
+
+### ENVIRONMENT
+.environment: &environment
+  environment:
+    name: "$ENVIRONMENT"
+    action: prepare
+
+### TRIGGERS
+.component-test: &component-test
+  rules:
+    - if: $BUILD_TYPE
+
+### COMPONENT TEST
+component-test:
+  extends: .docker-compose-run-template
+  stage: component-test
+  variables:
+    DOCKER_COMPOSE_FILE: "docker-compose.yml"
+    DOCKER_COMPOSE_COMMAND: "--exit-code-from component-tests"
+  <<: *environment
+  before_script:
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - export APP_IMAGE="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA"
+  after_script:
+    - docker logout
+  artifacts:
+    expire_in: 30 mins
+    paths:
+      - ./component-test/
+    when: always
+  <<: *component-test
+
+# Any thresholds are disabled as this shared CI environment will not produce
+# consistent results. Instead, relative performance can be used to identify
+# significant performance changes.
+# Gitlab Load Performance template deprecated due for removal in v17.0 https://docs.gitlab.com/ee/ci/testing/load_performance_testing.html
+load_performance:
+  image: docker:git
+  stage: component-test
+  services:
+    - name: docker:24.0.2-dind@sha256:f8b5e548ce35f1e177aaebae6e738315a7e9a75098d76dfae60238e0ce3a788b
+    - name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
+      alias: pdfservice
+  variables:
+    K6_IMAGE: grafana/k6:0.45.0@sha256:10683d5b3803e61567476136b6dcf4ac06df67bdc4a1c9fbbeab61bc916ccd77
+    FF_NETWORK_PER_BUILD: "true"
+    K6_TEST_FILE: load-test/test.js
+    K6_OPTIONS: "--no-thresholds"
+    K6_DOCKER_OPTIONS: "-e TARGET_HOST=pdfservice:6677 --network=host"
+  script:
+    - docker run --rm -v "$(pwd)":/k6 -w /k6 $K6_DOCKER_OPTIONS $K6_IMAGE run $K6_TEST_FILE --summary-export=load-performance.json $K6_OPTIONS
+  <<: *component-test
