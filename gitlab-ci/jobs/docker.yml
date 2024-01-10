@@ -35,6 +35,8 @@ docker-lint:
 ### BUILD
 docker-build:
   extends: .docker-build-template
+  before_script:
+    - echo $DT_API_TOKEN | docker login -u pik94420 --password-stdin https://pik94420.live.dynatrace.com
   variables:
     ADD_LATEST_TAG: "true"
     DOCKER_CLI_ARGS: "--build-arg GITLAB_REGISTRY_TOKEN=${GITLAB_REGISTRY_TOKEN}"

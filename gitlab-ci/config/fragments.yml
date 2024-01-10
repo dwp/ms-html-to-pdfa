@@ -4,14 +4,14 @@ include:
     ref: 2-3-1
     file: 'ci-include-credential-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/fragment-version-check'
-    ref: 2.3.7
+    ref: 2.3.8
     file: 'ci-include-fragment-version-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/required-fragment-check'
     ref: 2-10-0
     file: 'ci-include-required-fragment-check-base.yml'
   #update-version
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/update-semver'
-    ref: 4-4-2
+    ref: 4.5.0
     file: 'ci-include-update-semver-base.yml'
    #code-quality
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/gitleaks'
@@ -31,7 +31,7 @@ include:
     file: 'ci-include-docker-lint-base.yml'
     #code-test
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-test'
-    ref: 3-4-3
+    ref: 3.5.0
     file: 'ci-include-maven-api-test-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-compose-run'
     ref: 3-3-2
@@ -42,7 +42,7 @@ include:
     file: 'ci-include-maven-api-build-base.yml'
     #code-analysis
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-pitest'
-    ref: 3-3-4
+    ref: 3.4.0
     file: 'ci-include-maven-api-pitest-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-spotbugs'
     ref: 3-2-3
@@ -52,17 +52,17 @@ include:
     file: 'ci-include-gitlab-sast-base.yml'
     #image-build
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-build'
-    ref: 4.4.1
+    ref: 4.5.0
     file: 'ci-include-docker-build-base.yml'
     #container-image-test
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/sast-container-check'
     ref: 2.10.1
     file: 'ci-include-sast-container-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/trivy-container-check'
-    ref: 2.15.1
+    ref: 2.15.2
     file: 'ci-include-trivy-container-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/container-structure-test'
-    ref: 2.8.1
+    ref: 2.9.0
     file: 'ci-include-container-structure-test-base.yml'
     #image-push
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/push-to-ecr'
@@ -74,7 +74,7 @@ include:
     file: 'ci-include-create-project-badges-base.yml'
     #pages
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/pages-tech-docs'
-    ref: 4-0-1
+    ref: 5.0.0
     file: 'ci-include-pages_tech_docs-base.yml'
     #open-sourcing
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/open-source'
@@ -82,5 +82,5 @@ include:
     file: 'ci-include-open-source.yml'
     #create-schedules
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/schedule-creation'
-    ref: 2.5.0
+    ref: 2.7.0
     file: 'ci-include-schedule-creation-base.yml'

@@ -5,6 +5,8 @@
    file name: batik-*-*.jar - latest library version and should not be applicable to this use-case
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.xmlgraphics/batik\-.*@.*$</packageUrl>
+        <vulnerabilityName>CVE-2022-44729</vulnerabilityName>
+        <vulnerabilityName>CVE-2022-44730</vulnerabilityName>
         <vulnerabilityName>CVE-2022-42890</vulnerabilityName>
         <vulnerabilityName>CVE-2022-41704</vulnerabilityName>
         <vulnerabilityName>CVE-2022-40146</vulnerabilityName>
@@ -39,5 +41,27 @@
         <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
         <vulnerabilityName>CVE-2020-8908</vulnerabilityName>
         <vulnerabilityName>CVE-2023-2976</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: jetty-*-11.0.14.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org.eclipse.jetty/jetty-(io|server|http|util|servlet.?|security)@.*$</packageUrl>
+        <vulnerabilityName>CVE-2023-36478</vulnerabilityName>
+        <vulnerabilityName>CVE-2023-44487</vulnerabilityName>
+        <vulnerabilityName>CVE-2023-40167</vulnerabilityName>
+        <vulnerabilityName>CVE-2023-36479</vulnerabilityName>
+        <vulnerabilityName>CVE-2023-41900</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: logback-*-1.4.6.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/ch.qos.logback/logback-(core|util|access|classic)@.*$</packageUrl>
+        <vulnerabilityName>CVE-2023-6378</vulnerabilityName>
     </suppress>
 </suppressions>

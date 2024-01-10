@@ -5,7 +5,7 @@
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.15.1</version>
+    <version>1.16.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
@@ -36,7 +36,7 @@
         <commons-io.version>2.13.0</commons-io.version>
         <plugin.springboot.shade.version>3.1.0</plugin.springboot.shade.version>
         <snakeyaml.version>2.0</snakeyaml.version>
-        <batik-dom.version>1.16</batik-dom.version>
+        <batik-dom.version>1.17</batik-dom.version>
         <dropwizard.version>4.0.0</dropwizard.version>
         <prometheus.version>0.16.0</prometheus.version>
         <jackson.version>2.15.2</jackson.version>
