@@ -1,19 +1,13 @@
 $schema: https://gitlab.com/dwp/secure-development/schema/project-metadata/-/raw/v1.0.0/schema/project-metadata.json
-
 schema_version: 1.0.0
-
 project:
   - project_id: 26453018
     component_name: ms-html-to-pdfa
-
-    version: 1.15.1
-
+    version: 1.17.0
     last_verified:
-      date: "2023-12-27"
-      name: "@mikael.alisson"
-
+      date: "2024-05-24"
+      name: "@lewis.jones1"
     tags:
       payments: false
       personally_identifying_information: true
-
     cmdb_id: badbf59ddbac0858808176d9bf961903

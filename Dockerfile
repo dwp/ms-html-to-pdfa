@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/java17@sha256:9595fd074976b36fbaa8feec02c2e15b93fd3a6c424563ef364a1c28b2eca30d
+FROM gcr.io/distroless/java17@sha256:8bb82ccf73085b71159ce05d2cc6030cbaa927b403c04774f0b22f37ab4fd78a
 EXPOSE 9101
 
 COPY ./target/ms-html-to-pdfa*.jar /ms-html-to-pdfa.jar

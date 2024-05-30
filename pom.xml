@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.gov.dwp.pdfa</groupId>
     <artifactId>ms-html-to-pdfa</artifactId>
-    <version>1.16.0</version>
+    <version>1.17.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Take an XHTML document and produce and pdf document at various conformance levels</description>
