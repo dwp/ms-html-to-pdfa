@@ -4,10 +4,10 @@ include:
     ref: 2-3-1
     file: 'ci-include-credential-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/fragment-version-check'
-    ref: 2.3.8
+    ref: 2.4.0
     file: 'ci-include-fragment-version-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/required-fragment-check'
-    ref: 2-10-0
+    ref: 2.13.0
     file: 'ci-include-required-fragment-check-base.yml'
   #update-version
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/update-semver'
@@ -31,10 +31,10 @@ include:
     file: 'ci-include-docker-lint-base.yml'
     #code-test
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-test'
-    ref: 3.6.1
+    ref: 3.7.0
     file: 'ci-include-maven-api-test-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-compose-run'
-    ref: 3-3-2
+    ref: 3.4.0
     file: 'ci-include-docker-compose-run-base.yml'
     #application-build
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-build'
@@ -42,35 +42,35 @@ include:
     file: 'ci-include-maven-api-build-base.yml'
     #code-analysis
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-pitest'
-    ref: 3.4.0
+    ref: 3.4.1
     file: 'ci-include-maven-api-pitest-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-spotbugs'
     ref: 3.4.0
-    file: 'ci-include-maven-api-spotbugs-base.yml'  
+    file: 'ci-include-maven-api-spotbugs-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/gitlab-sast'
     ref: 2.0.0
     file: 'ci-include-gitlab-sast-base.yml'
     #image-build
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/docker-build'
-    ref: 5.0.1
+    ref: 5.1.0
     file: 'ci-include-docker-build-base.yml'
     #container-image-test
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/sast-container-check'
-    ref: 2.10.1
+    ref: 2.11.0
     file: 'ci-include-sast-container-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/trivy-container-check'
-    ref: 2.15.2
+    ref: 2.20.0
     file: 'ci-include-trivy-container-check-base.yml'
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/container-structure-test'
-    ref: 2.9.0
+    ref: 2.10.0
     file: 'ci-include-container-structure-test-base.yml'
     #image-push
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/push-to-ecr'
-    ref: 4.6.1
+    ref: 4.7.1
     file: 'ci-include-push-to-ecr-base.yml'
     #update-project-metadata
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/create-project-badges'
-    ref: 2.3.0
+    ref: 2.4.0
     file: 'ci-include-create-project-badges-base.yml'
     #pages
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/pages-tech-docs'

@@ -17,7 +17,7 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name: metrics-httpclient5-4.2.18.jar
+                file name: metrics-httpclient5-4.2.28.jar
             ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.dropwizard\.metrics/metrics\-httpclient5@.*$</packageUrl>
         <cve>CVE-2020-13956</cve>
@@ -26,42 +26,10 @@
     <suppress>
         <notes>
             <![CDATA[
-                 file name: jackson-databind-2.15.1.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml.*$</packageUrl>
-        <cve>CVE-2023-35116</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: guava-31.1-jre.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
-        <vulnerabilityName>CVE-2020-8908</vulnerabilityName>
-        <vulnerabilityName>CVE-2023-2976</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: jetty-*-11.0.14.jar
+                file name: jetty-*-11.0.24.jar
             ]]>
         </notes>
         <packageUrl regex="true">^pkg:maven/org.eclipse.jetty/jetty-(io|server|http|util|servlet.?|security)@.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-36478</vulnerabilityName>
-        <vulnerabilityName>CVE-2023-44487</vulnerabilityName>
-        <vulnerabilityName>CVE-2023-40167</vulnerabilityName>
-        <vulnerabilityName>CVE-2023-36479</vulnerabilityName>
-        <vulnerabilityName>CVE-2023-41900</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: logback-*-1.4.6.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/ch.qos.logback/logback-(core|util|access|classic)@.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-6378</vulnerabilityName>
+        <vulnerabilityName>CVE-2024-6763</vulnerabilityName>
     </suppress>
 </suppressions>

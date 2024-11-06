@@ -3,10 +3,10 @@ schema_version: 1.0.0
 project:
   - project_id: 26453018
     component_name: ms-html-to-pdfa
-    version: 1.17.0
+    version: 1.19.0
     last_verified:
-      date: "2024-05-24"
-      name: "@lewis.jones1"
+      date: "2024-09-26"
+      name: "@bhabani.samantaray1"
     tags:
       payments: false
       personally_identifying_information: true
