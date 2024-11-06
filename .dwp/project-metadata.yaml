@@ -3,7 +3,7 @@ schema_version: 1.0.0
 project:
   - project_id: 26453018
     component_name: ms-html-to-pdfa
-    version: 1.19.0
+    version: 1.20.0-SNAPSHOT
     last_verified:
       date: "2024-09-26"
       name: "@bhabani.samantaray1"
